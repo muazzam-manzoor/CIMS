@@ -1,5 +1,7 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
+import { getFormatLocale } from "@/lib/format";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -52,6 +54,7 @@ type VehicleSortField =
 type SortOrder = "asc" | "desc";
 
 export default function InventoryPage() {
+  useLang();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -198,7 +201,7 @@ export default function InventoryPage() {
       return "—";
     }
 
-    return `¥. ${price.toLocaleString("en-JP")}`;
+    return `¥. ${price.toLocaleString(getFormatLocale())}`;
   };
   const formatDate = (date?: string) => {
     if(date === undefined || date === null){
@@ -412,8 +415,7 @@ export default function InventoryPage() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-              Vehicle stock
-            </h1>
+              {translateUI("Vehicle stock")} </h1>
 
             {totalCount > 0 && (
               <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
@@ -423,8 +425,7 @@ export default function InventoryPage() {
           </div>
 
           <p className="mt-1 text-sm text-slate-500">
-            Search, filter, sort, and manage vehicles currently in the business.
-          </p>
+            {translateUI("Search, filter, sort, and manage vehicles currently in the business.")} </p>
         </div>
 
         <button
@@ -433,8 +434,7 @@ export default function InventoryPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.98]"
         >
           <Plus className="h-4 w-4" />
-          Add vehicle
-        </button>
+          {translateUI("Add vehicle")} </button>
       </div>
 
       <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-[0_8px_25px_rgba(15,23,42,0.035)]">
@@ -446,7 +446,7 @@ export default function InventoryPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search vehicle, model, chassis or registration..."
+              placeholder={translateUI("Search vehicle, model, chassis or registration...")}
               className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pr-4 pl-10 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100"
             />
           </div>
@@ -464,10 +464,10 @@ export default function InventoryPage() {
                 }
                 className="bg-transparent text-sm font-medium text-slate-700 outline-none"
               >
-                <option value="ALL">All status</option>
-                <option value="AVAILABLE">Available</option>
-                <option value="SOLD">Sold</option>
-                <option value="DISCARDED">Discarded</option>
+                <option value="ALL">{translateUI("All status")}</option>
+                <option value="AVAILABLE">{translateUI("Available")}</option>
+                <option value="SOLD">{translateUI("Sold")}</option>
+                <option value="DISCARDED">{translateUI("Discarded")}</option>
               </select>
             </div>
 
@@ -477,8 +477,7 @@ export default function InventoryPage() {
               disabled={loading}
               className="h-11 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Refresh
-            </button>
+              {translateUI("Refresh")} </button>
           </div>
         </div>
       </div>
@@ -491,8 +490,7 @@ export default function InventoryPage() {
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-sky-600" />
 
               <p className="text-sm text-slate-500">
-                Loading vehicles...
-              </p>
+                {translateUI("Loading vehicles...")} </p>
             </div>
           </div>
         ) : vehicles.length === 0 ? (
@@ -502,13 +500,14 @@ export default function InventoryPage() {
             </div>
 
             <h3 className="mt-4 text-sm font-semibold text-slate-900">
-              No vehicles found
-            </h3>
+              {translateUI("No vehicles found")} </h3>
 
             <p className="mt-1 max-w-sm text-sm text-slate-500">
               {search || statusFilter !== "ALL"
-                ? "Try changing your search or status filter."
-                : "Add your first vehicle to start managing your inventory."}
+                ? translateUI("Try changing your search or status filter.")
+                : translateUI(
+                    "Add your first vehicle to start managing your inventory.",
+                  )}
             </p>
 
             {(search || statusFilter !== "ALL") && (
@@ -520,8 +519,7 @@ export default function InventoryPage() {
                 }}
                 className="mt-4 rounded-lg px-3 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-50"
               >
-                Clear filters
-              </button>
+                {translateUI("Clear filters")} </button>
             )}
           </div>
         ) : (
@@ -531,8 +529,7 @@ export default function InventoryPage() {
                 <thead>
                   <tr className="border-b border-slate-100 bg-slate-50/80">
                     <th className="px-5 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                        Vehicle
-                        {/* {getSortIcon("name")} */}
+                        {translateUI("Vehicle")} {/* {getSortIcon("name")} */}
                     </th>
 
                     <th className="px-5 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase">
@@ -543,13 +540,11 @@ export default function InventoryPage() {
                       >
                         {getSortIcon("model")}
                       </button> */}
-                        Model
-                    </th>
+                        {translateUI("Model")} </th>
 
 
                     <th className="px-5 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                      Chassis number
-                    </th>
+                      {translateUI("Chassis number")} </th>
 
                     
                     <th className="px-5 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase">
@@ -562,8 +557,7 @@ export default function InventoryPage() {
                       >
                         {getSortIcon("purchasePrice")}
                       </button> */}
-                        Purchase price
-                    </th>
+                        {translateUI("Purchase price")} </th>
                     <th className="px-5 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase">
                       {/* <button
                         type="button"
@@ -572,16 +566,13 @@ export default function InventoryPage() {
                       >
                         {getSortIcon("purchaseDate")}
                       </button> */}
-                        Purchase Date
-                    </th>
+                        {translateUI("Purchase Date")} </th>
 
                     <th className="px-5 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                      Status
-                    </th>
+                      {translateUI("Status")} </th>
 
                     <th className="px-5 py-3 text-right text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                      Actions
-                    </th>
+                      {translateUI("Actions")} </th>
                   </tr>
                 </thead>
 
@@ -599,7 +590,7 @@ export default function InventoryPage() {
                             </p>
 
                             <p className="mt-0.5 text-xs text-slate-500">
-                              {vehicle.color}
+                              {translateUI(vehicle.color ?? "")}
                             </p>
                           </div>
                         </div>
@@ -630,7 +621,7 @@ export default function InventoryPage() {
                             vehicle.status
                           )}`}
                         >
-                          {getStatusLabel(vehicle.status)}
+                          {translateUI(getStatusLabel(vehicle.status))}
                         </span>
                       </td>
 
@@ -639,7 +630,7 @@ export default function InventoryPage() {
                           <Link
                             href={`/inventory/${vehicle._id}`}
                             className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-sky-50 hover:text-sky-700"
-                            title="View vehicle"
+                            title={translateUI("View vehicle")}
                           >
                             <Eye className="h-4 w-4" />
                           </Link>
@@ -651,7 +642,7 @@ export default function InventoryPage() {
                                 openSellModal(vehicle)
                               }
                               className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-emerald-50 hover:text-emerald-600"
-                              title="Mark as sold"
+                              title={translateUI("Mark as sold")}
                             >
                               <CheckCircle2 className="h-4 w-4" />
                             </button>
@@ -662,7 +653,7 @@ export default function InventoryPage() {
                               <Link
                                 href={`/inventory/${vehicle._id}/edit`}
                                 className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-                                title="Edit vehicle"
+                                title={translateUI("Edit vehicle")}
                               >
                                 <Pencil className="h-4 w-4" />
                               </Link>
@@ -673,7 +664,7 @@ export default function InventoryPage() {
                                   handleDiscard(vehicle)
                                 }
                                 className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600"
-                                title="Discard vehicle"
+                                title={translateUI("Discard vehicle")}
                               >
                                 <Trash2 className="h-4 w-4" />
                               </button>
@@ -691,20 +682,19 @@ export default function InventoryPage() {
             {totalCount > 0 && (
               <div className="flex flex-col gap-3 border-t border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs text-slate-500">
-                  Showing{" "}
+                  {translateUI("Showing")}{" "}
                   <span className="font-semibold text-slate-700">
                     {(page - 1) * limit + 1}
                   </span>{" "}
-                  to{" "}
+                  {translateUI("to")}{" "}
                   <span className="font-semibold text-slate-700">
                     {Math.min(page * limit, totalCount)}
                   </span>{" "}
-                  of{" "}
+                  {translateUI("of")}{" "}
                   <span className="font-semibold text-slate-700">
                     {totalCount}
                   </span>{" "}
-                  vehicles
-                </p>
+                  {translateUI("vehicles")} </p>
 
                 <div className="flex items-center gap-2">
                   <button
@@ -715,11 +705,10 @@ export default function InventoryPage() {
                     }
                     className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Previous
-                  </button>
+                    {translateUI("Previous")} </button>
 
                   <span className="min-w-20 text-center text-xs font-semibold text-slate-600">
-                    Page {page} of{" "}
+                    {translateUI("Page")} {page} {translateUI("of")}{" "}
                     {Math.max(
                       1,
                       Math.ceil(totalCount / limit)
@@ -734,8 +723,7 @@ export default function InventoryPage() {
                     }
                     className="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Next
-                  </button>
+                    {translateUI("Next")} </button>
                 </div>
               </div>
             )}
@@ -756,13 +744,11 @@ export default function InventoryPage() {
             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  Mark as Sold
-                </h2>
+                  {translateUI("Mark as Sold")} </h2>
 
                 <p className="mt-1 text-xs text-slate-500">
-                  {selectedVehicle.name} {selectedVehicle.model} · Step{" "}
-                  {sellStep} of 2
-                </p>
+                  {selectedVehicle.name} {selectedVehicle.model} {translateUI("· Step")}{" "}
+                  {sellStep} {translateUI("of 2")} </p>
               </div>
 
               <button
@@ -771,8 +757,7 @@ export default function InventoryPage() {
                 onClick={() => setShowSellModal(false)}
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50"
               >
-                ×
-              </button>
+                {translateUI("×")} </button>
             </div>
 
             {/* STEP 1 */}
@@ -781,8 +766,7 @@ export default function InventoryPage() {
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Sale Type
-                  </label>
+                    {translateUI("Sale Type")} </label>
 
                   <div className="grid grid-cols-2 gap-3">
                     <button
@@ -794,8 +778,7 @@ export default function InventoryPage() {
                           : "border-slate-200 text-slate-600 hover:border-slate-300"
                       }`}
                     >
-                      Auction
-                    </button>
+                      {translateUI("Auction")} </button>
                     <button
                       type="button"
                       onClick={() => setSaleType("CUSTOMER")}
@@ -805,30 +788,27 @@ export default function InventoryPage() {
                           : "border-slate-200 text-slate-600 hover:border-slate-300"
                       }`}
                     >
-                      Customer
-                    </button>
+                      {translateUI("Customer")} </button>
                   </div>
                 </div>
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Sold Price *
-                  </label>
+                    {translateUI("Sold Price *")} </label>
 
                   <input
                     type="number"
                     min="1"
                     value={salePrice}
                     onChange={(e) => setSalePrice(e.target.value)}
-                    placeholder="Enter sold price"
+                    placeholder={translateUI("Enter sold price")}
                     className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Sold Date *
-                  </label>
+                    {translateUI("Sold Date *")} </label>
 
                   <input
                     type="date"
@@ -844,8 +824,7 @@ export default function InventoryPage() {
                     onClick={() => setShowSellModal(false)}
                     className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
                   >
-                    Cancel
-                  </button>
+                    {translateUI("Cancel")} </button>
 
                   <button
                     type="button"
@@ -864,8 +843,7 @@ export default function InventoryPage() {
                     }}
                     className="rounded-xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-sky-700"
                   >
-                    Next
-                  </button>
+                    {translateUI("Next")} </button>
                 </div>
               </div>
             )}
@@ -877,31 +855,29 @@ export default function InventoryPage() {
                 <div className="rounded-xl bg-slate-50 p-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-slate-500">
-                      Sale Type
-                    </span>
+                      {translateUI("Sale Type")} </span>
 
                     <span className="text-sm font-semibold text-slate-900">
                       {saleType === "CUSTOMER"
-                        ? "Customer"
-                        : "Auction"}
+                        ? translateUI("Customer")
+                        : translateUI("Auction")}
                     </span>
                   </div>
 
                   <div className="mt-2 flex items-center justify-between">
                     <span className="text-sm text-slate-500">
-                      Sale Price
-                    </span>
+                      {translateUI("Sale Price")} </span>
 
                     <span className="font-semibold text-slate-900">
-                    ¥. {Number(salePrice).toLocaleString("en-JP")}
+                    {translateUI("¥.")}{" "}
+                    {Number(salePrice).toLocaleString(getFormatLocale())}
                     </span>
                   </div>
                 </div>
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Payment Type
-                  </label>
+                    {translateUI("Payment Type")} </label>
 
                   <div className="grid grid-cols-2 gap-3">
                     <button
@@ -913,8 +889,7 @@ export default function InventoryPage() {
                           : "border-slate-200 text-slate-600"
                       }`}
                     >
-                      Full Payment
-                    </button>
+                      {translateUI("Full Payment")} </button>
 
                     <button
                       type="button"
@@ -925,8 +900,7 @@ export default function InventoryPage() {
                           : "border-slate-200 text-slate-600"
                       }`}
                     >
-                      Partial Payment
-                    </button>
+                      {translateUI("Partial Payment")} </button>
                   </div>
                 </div>
 
@@ -940,8 +914,7 @@ export default function InventoryPage() {
                   {paymentType === "PARTIAL" && (
                     <div>
                       <label className="mb-2 block text-sm font-medium text-slate-700">
-                        Paid Amount *
-                      </label>
+                        {translateUI("Paid Amount *")} </label>
 
                       <input
                         type="number"
@@ -949,7 +922,7 @@ export default function InventoryPage() {
                         max={Number(salePrice)}
                         value={paymentAmount}
                         onChange={(e) => setPaymentAmount(e.target.value)}
-                        placeholder="Enter paid amount"
+                        placeholder={translateUI("Enter paid amount")}
                         className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                       />
                     </div>
@@ -957,8 +930,7 @@ export default function InventoryPage() {
 
                   <div>
                     <label className="mb-2 block text-sm font-medium text-slate-700">
-                      Payment Date *
-                    </label>
+                      {translateUI("Payment Date *")} </label>
 
                     <input
                       type="date"
@@ -970,8 +942,7 @@ export default function InventoryPage() {
 
                   <div>
                     <label className="mb-2 block text-sm font-medium text-slate-700">
-                      Payment Method *
-                    </label>
+                      {translateUI("Payment Method *")} </label>
 
                     <select
                       value={paymentMethod}
@@ -982,37 +953,36 @@ export default function InventoryPage() {
                       }
                       className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                     >
-                      <option value="CASH">Cash</option>
-                      <option value="BANK">Bank</option>
-                      <option value="ONLINE">Online</option>
-                      <option value="OTHER">Other</option>
+                      <option value="CASH">{translateUI("Cash")}</option>
+                      <option value="BANK">{translateUI("Bank")}</option>
+                      <option value="ONLINE">{translateUI("Online")}</option>
+                      <option value="OTHER">{translateUI("Other")}</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="mb-2 block text-sm font-medium text-slate-700">
-                      Notes
-                    </label>
+                      {translateUI("Notes")} </label>
 
                     <textarea
                       rows={3}
                       value={paymentNotes}
                       onChange={(e) => setPaymentNotes(e.target.value)}
-                      placeholder="Optional notes"
+                      placeholder={translateUI("Optional notes")}
                       className="w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                     />
                   </div>
 
                   {paymentType === "PARTIAL" && paymentAmount && (
                     <div className="flex justify-between border-t border-amber-200 pt-3 text-sm">
-                      <span className="text-slate-600">Remaining</span>
+                      <span className="text-slate-600">{translateUI("Remaining")}</span>
 
                       <span className="font-bold text-slate-900">
-                      ¥.{" "}
+                      {translateUI("¥.")}{" "}
                         {Math.max(
                           0,
                           Number(salePrice) - Number(paymentAmount)
-                        ).toLocaleString("en-JP")}
+                        ).toLocaleString(getFormatLocale())}
                       </span>
                     </div>
                   )}
@@ -1025,8 +995,7 @@ export default function InventoryPage() {
                     onClick={() => setSellStep(1)}
                     className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50"
                   >
-                    Back
-                  </button>
+                    {translateUI("Back")} </button>
 
                   <div className="flex gap-2">
                     <button
@@ -1035,8 +1004,7 @@ export default function InventoryPage() {
                       onClick={() => handleConfirmSale(false)}
                       className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                     >
-                      Save Later
-                    </button>
+                      {translateUI("Save Later")} </button>
 
                     <button
                       type="button"
@@ -1044,7 +1012,7 @@ export default function InventoryPage() {
                       onClick={() => handleConfirmSale(true)}
                       className="rounded-xl bg-sky-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-50"
                     >
-                      {savingSale ? "Saving..." : "Save"}
+                      {translateUI(savingSale ? "Saving..." : "Save")}
                     </button>
                   </div>
                 </div>

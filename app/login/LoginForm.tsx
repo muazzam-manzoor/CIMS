@@ -1,10 +1,12 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { FormEvent, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CarFront, LockKeyhole, Mail } from "lucide-react";
 
 export default function LoginForm() {
+  useLang();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -89,12 +91,10 @@ export default function LoginForm() {
             </div>
 
             <h1 className="mt-5 text-2xl font-bold tracking-tight text-slate-900">
-              CIMS
-            </h1>
+              {translateUI("CIMS")} </h1>
 
             <p className="mt-1 text-sm text-slate-500">
-              Car Inventory Management System
-            </p>
+              {translateUI("Car Inventory Management System")} </p>
           </div>
 
           {/* Login */}
@@ -104,8 +104,7 @@ export default function LoginForm() {
           >
             <div>
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                Email
-              </label>
+                {translateUI("Email")} </label>
 
               <div className="relative">
                 <Mail className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -116,7 +115,7 @@ export default function LoginForm() {
                   onChange={(event) =>
                     setEmail(event.target.value)
                   }
-                  placeholder="admin@example.com"
+                  placeholder={translateUI("admin@example.com")}
                   autoComplete="email"
                   className="h-11 w-full rounded-xl border border-slate-200 bg-white pr-3 pl-10 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
@@ -125,8 +124,7 @@ export default function LoginForm() {
 
             <div>
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                Password
-              </label>
+                {translateUI("Password")} </label>
 
               <div className="relative">
                 <LockKeyhole className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -137,7 +135,7 @@ export default function LoginForm() {
                   onChange={(event) =>
                     setPassword(event.target.value)
                   }
-                  placeholder="Enter your password"
+                  placeholder={translateUI("Enter your password")}
                   autoComplete="current-password"
                   className="h-11 w-full rounded-xl border border-slate-200 bg-white pr-3 pl-10 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
@@ -156,8 +154,8 @@ export default function LoginForm() {
               className="h-11 w-full rounded-xl bg-slate-900 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading
-                ? "Signing in..."
-                : "Sign in"}
+                ? translateUI("Signing in...")
+                : translateUI("Sign in")}
             </button>
           </form>
         </div>

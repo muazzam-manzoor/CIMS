@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { use, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -19,6 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useConfirm } from "@/components/confirm-provider";
+import { getFormatLocale } from "@/lib/format";
 import { ReturnSaleModal } from "@/components/ReturnSaleModal";
 import { SaleDetailsModal } from "@/components/SaleDetailsModal";
 
@@ -76,13 +78,13 @@ function formatPrice(value?: number | null) {
     return "—";
   }
 
-  return `¥. ${value.toLocaleString("en-JP")}`;
+  return `¥. ${value.toLocaleString(getFormatLocale())}`;
 }
 
 function formatDate(value?: string) {
   if (!value) return "—";
 
-  return new Date(value).toLocaleDateString("en-JP", {
+  return new Date(value).toLocaleDateString(getFormatLocale(), {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -112,6 +114,7 @@ function statusClass(status: Vehicle["status"]) {
 }
 
 export default function VehicleViewPage({ params }: Props) {
+  useLang();
   const { id } = use(params);
   const confirm = useConfirm();
 
@@ -293,7 +296,7 @@ export default function VehicleViewPage({ params }: Props) {
         </div>
 
         <h2 className="mt-4 text-lg font-semibold text-red-900">
-          {notFound ? "Vehicle not found" : "Couldn't load vehicle"}
+          {translateUI(notFound ? "Vehicle not found" : "Couldn't load vehicle")}
         </h2>
 
         <p className="mt-2 text-sm text-red-700">
@@ -308,8 +311,7 @@ export default function VehicleViewPage({ params }: Props) {
               className="inline-flex items-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-50"
             >
               <RefreshCw className="h-4 w-4" />
-              Try again
-            </button>
+              {translateUI("Try again")} </button>
           )}
 
           <Link
@@ -317,8 +319,7 @@ export default function VehicleViewPage({ params }: Props) {
             className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to inventory
-          </Link>
+            {translateUI("Back to inventory")} </Link>
         </div>
       </div>
     );
@@ -338,8 +339,7 @@ export default function VehicleViewPage({ params }: Props) {
             className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to inventory
-          </Link>
+            {translateUI("Back to inventory")} </Link>
 
           <div className="mt-3 flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50">
@@ -357,7 +357,7 @@ export default function VehicleViewPage({ params }: Props) {
                     vehicle.status
                   )}`}
                 >
-                  {statusLabel(vehicle.status)}
+                  {translateUI(statusLabel(vehicle.status))}
                 </span>
               </div>
 
@@ -379,8 +379,7 @@ export default function VehicleViewPage({ params }: Props) {
               className="inline-flex h-10 items-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
             >
               <Plus className="h-4 w-4" />
-              Add Expense
-            </button>
+              {translateUI("Add Expense")} </button>
           )}
           {vehicle.status === "SOLD" && financials?.sale && (
             <button
@@ -388,8 +387,7 @@ export default function VehicleViewPage({ params }: Props) {
               onClick={() => setReturnOpen(true)}
               className="inline-flex h-10 items-center gap-2 rounded-xl border border-red-200 bg-white px-4 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-50"
             >
-              Return Sale
-            </button>
+              {translateUI("Return Sale")} </button>
           )}
           {vehicle.status !== "DISCARDED" && (
             <Link
@@ -397,8 +395,7 @@ export default function VehicleViewPage({ params }: Props) {
               className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
             >
               <Pencil className="h-4 w-4" />
-              Edit
-            </Link>
+              {translateUI("Edit")} </Link>
           )}
 
           {vehicle.status === "AVAILABLE" && (
@@ -409,7 +406,7 @@ export default function VehicleViewPage({ params }: Props) {
               className="inline-flex h-10 items-center gap-2 rounded-xl bg-red-600 px-4 text-sm font-semibold text-white shadow-sm hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Trash2 className="h-4 w-4" />
-              {discarding ? "Discarding..." : "Discard"}
+              {translateUI(discarding ? "Discarding..." : "Discard")}
             </button>
           )}
         </div>
@@ -420,9 +417,7 @@ export default function VehicleViewPage({ params }: Props) {
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
 
           <p className="text-sm text-red-700">
-            This vehicle has been discarded. It can no longer be edited or
-            sold.
-          </p>
+            {translateUI("This vehicle has been discarded. It can no longer be edited or sold.")} </p>
         </div>
       )}
 
@@ -430,19 +425,19 @@ export default function VehicleViewPage({ params }: Props) {
       <section>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
-            label="Purchase Price"
+            label={translateUI("Purchase Price")}
             value={formatPrice(vehicle.purchasePrice)}
             description={
               vehicle.purchaseDate
                 ? `Bought on ${formatDate(vehicle.purchaseDate)}`
-                : "Purchase date not set"
+                : translateUI("Purchase date not set")
             }
             icon={<CarFront className="h-5 w-5" />}
             iconClass="bg-blue-50 text-blue-600"
           />
 
           <StatCard
-            label="Vehicle Expenses"
+            label={translateUI("Vehicle Expenses")}
             value={formatPrice(financials?.vehicleExpenses ?? 0)}
             description={`${financials?.expenseCount ?? 0} expense record${
               (financials?.expenseCount ?? 0) === 1 ? "" : "s"
@@ -452,18 +447,18 @@ export default function VehicleViewPage({ params }: Props) {
           />
 
           <StatCard
-            label="Total Investment"
+            label={translateUI("Total Investment")}
             value={formatPrice(financials?.investment ?? vehicle.purchasePrice ?? 0)}
-            description="Purchase price + expenses"
+            description={translateUI("Purchase price + expenses")}
             icon={<Wallet className="h-5 w-5" />}
             iconClass="bg-violet-50 text-violet-600"
           />
 
           {sale ? (
             <StatCard
-              label={sale.profit >= 0 ? "Profit" : "Loss"}
+              label={translateUI(sale.profit >= 0 ? "Profit" : "Loss")}
               value={formatPrice(Math.abs(sale.profit))}
-              description="Sale price − total investment"
+              description={translateUI("Sale price − total investment")}
               valueClass={
                 sale.profit >= 0 ? "text-emerald-600" : "text-red-600"
               }
@@ -482,12 +477,14 @@ export default function VehicleViewPage({ params }: Props) {
             />
           ) : (
             <StatCard
-              label="Sale"
-              value={vehicle.status === "SOLD" ? "No sale record" : "Not sold"}
+              label={translateUI("Sale")}
+              value={translateUI(
+                vehicle.status === "SOLD" ? "No sale record" : "Not sold",
+              )}
               description={
                 vehicle.status === "AVAILABLE"
-                  ? "Currently in stock"
-                  : "Nothing to show"
+                  ? translateUI("Currently in stock")
+                  : translateUI("Nothing to show")
               }
               icon={<CircleDollarSign className="h-5 w-5" />}
               iconClass="bg-slate-100 text-slate-500"
@@ -498,9 +495,7 @@ export default function VehicleViewPage({ params }: Props) {
         {vehicle.purchasePrice === undefined && (
           <p className="mt-3 flex items-center gap-2 rounded-xl bg-amber-50 px-4 py-2.5 text-xs text-amber-700">
             <AlertCircle className="h-4 w-4 shrink-0" />
-            Purchase price is not set, so investment and profit are incomplete.
-            Add it from Edit.
-          </p>
+            {translateUI("Purchase price is not set, so investment and profit are incomplete. Add it from Edit.")} </p>
         )}
       </section>
 
@@ -510,11 +505,10 @@ export default function VehicleViewPage({ params }: Props) {
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h2 className="text-sm font-semibold text-slate-900">
-                Vehicle Images
-              </h2>
+                {translateUI("Vehicle Images")} </h2>
 
               <p className="mt-1 text-xs text-slate-500">
-                {images.length} {images.length === 1 ? "image" : "images"}
+                {images.length} {images.length === 1 ? translateUI("image") : translateUI("images")}
               </p>
             </div>
           </div>
@@ -566,11 +560,10 @@ export default function VehicleViewPage({ params }: Props) {
           <div className="mb-5 flex items-center justify-between">
             <div>
               <h2 className="text-sm font-semibold text-slate-900">
-                Sale Summary
-              </h2>
+                {translateUI("Sale Summary")} </h2>
 
               <p className="mt-1 text-xs text-slate-500">
-                Sold on {formatDate(sale.saleDate)}
+                {translateUI("Sold on")} {formatDate(sale.saleDate)}
               </p>
             </div>
 
@@ -589,7 +582,9 @@ export default function VehicleViewPage({ params }: Props) {
                       : "bg-amber-50 text-amber-700"
                   }`}
                 >
-                  {sale.paymentStatus === "PAID" ? "Paid" : "Partial payment"}
+                  {translateUI(
+                    sale.paymentStatus === "PAID" ? "Paid" : "Partial payment",
+                  )}
                 </span>
 
                 <button
@@ -597,8 +592,7 @@ export default function VehicleViewPage({ params }: Props) {
                   onClick={() => setSaleModal({ add: false })}
                   className="h-8 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                 >
-                  Payments
-                </button>
+                  {translateUI("Payments")} </button>
 
                 {sale.remaining > 0 && (
                   <button
@@ -607,8 +601,7 @@ export default function VehicleViewPage({ params }: Props) {
                     className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-slate-900 px-3 text-xs font-semibold text-white hover:bg-slate-800"
                   >
                     <Plus className="h-3.5 w-3.5" />
-                    Add payment
-                  </button>
+                    {translateUI("Add payment")} </button>
                 )}
               </div>
             </span>
@@ -616,17 +609,19 @@ export default function VehicleViewPage({ params }: Props) {
 
           <div className="grid gap-3 sm:grid-cols-2">
             <SummaryRow
-              label="Sale Type"
-              value={sale.saleType === "CUSTOMER" ? "Customer" : "Auction"}
+              label={translateUI("Sale Type")}
+              value={translateUI(
+                sale.saleType === "CUSTOMER" ? "Customer" : "Auction",
+              )}
             />
-            <SummaryRow label="Sale Price" value={formatPrice(sale.salePrice)} />
+            <SummaryRow label={translateUI("Sale Price")} value={formatPrice(sale.salePrice)} />
             <SummaryRow
-              label="Received"
+              label={translateUI("Received")}
               value={formatPrice(sale.totalPaid)}
               valueClass="text-emerald-600"
             />
             <SummaryRow
-              label="Remaining"
+              label={translateUI("Remaining")}
               value={formatPrice(sale.remaining)}
               valueClass={sale.remaining > 0 ? "text-amber-600" : undefined}
             />
@@ -638,23 +633,21 @@ export default function VehicleViewPage({ params }: Props) {
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-5">
           <h2 className="text-sm font-semibold text-slate-900">
-            Basic Details
-          </h2>
+            {translateUI("Basic Details")} </h2>
 
           <p className="mt-1 text-xs text-slate-500">
-            Primary details for this vehicle.
-          </p>
+            {translateUI("Primary details for this vehicle.")} </p>
         </div>
 
         <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
-          <Detail label="Vehicle Name" value={vehicle.name} />
-          <Detail label="Model" value={vehicle.model} />
-          <Detail label="Color" value={vehicle.color} />
+          <Detail label={translateUI("Vehicle Name")} value={vehicle.name} />
+          <Detail label={translateUI("Model")} value={vehicle.model} />
+          <Detail label={translateUI("Color")} value={vehicle.color} />
           <Detail
-            label="Purchase Date"
+            label={translateUI("Purchase Date")}
             value={vehicle.purchaseDate ? formatDate(vehicle.purchaseDate) : undefined}
           />
-          <Detail label="Purchase Price" value={formatPrice(vehicle.purchasePrice)} />
+          <Detail label={translateUI("Purchase Price")} value={formatPrice(vehicle.purchasePrice)} />
         </div>
       </section>
 
@@ -662,40 +655,38 @@ export default function VehicleViewPage({ params }: Props) {
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-5">
           <h2 className="text-sm font-semibold text-slate-900">
-            Additional Information
-          </h2>
+            {translateUI("Additional Information")} </h2>
 
           <p className="mt-1 text-xs text-slate-500">
-            Extended specifications and record details.
-          </p>
+            {translateUI("Extended specifications and record details.")} </p>
         </div>
 
         <div className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
-          <Detail label="Chassis Number" value={vehicle.chassisNumber} mono />
-          <Detail label="Engine Number" value={vehicle.engineNumber} mono />
+          <Detail label={translateUI("Chassis Number")} value={vehicle.chassisNumber} mono />
+          <Detail label={translateUI("Engine Number")} value={vehicle.engineNumber} mono />
           <Detail
-            label="Registration Number"
+            label={translateUI("Registration Number")}
             value={vehicle.registrationNumber}
           />
           <Detail
-            label="Mileage"
+            label={translateUI("Mileage")}
             value={
               vehicle.mileage != null
-                ? `${vehicle.mileage.toLocaleString("en-JP")} km`
+                ? `${vehicle.mileage.toLocaleString(getFormatLocale())} km`
                 : undefined
             }
           />
-          <Detail label="Location" value={vehicle.location} />
-          <Detail label="Condition" value={vehicle.condition} />
-          <Detail label="Added" value={formatDate(vehicle.createdAt)} />
-          <Detail label="Last Updated" value={formatDate(vehicle.updatedAt)} />
+          <Detail label={translateUI("Location")} value={vehicle.location} />
+          <Detail label={translateUI("Condition")} value={vehicle.condition} />
+          <Detail label={translateUI("Added")} value={formatDate(vehicle.createdAt)} />
+          <Detail label={translateUI("Last Updated")} value={formatDate(vehicle.updatedAt)} />
         </div>
       </section>
 
       {/* Notes */}
       {vehicle.notes && (
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-sm font-semibold text-slate-900">Notes</h2>
+          <h2 className="text-sm font-semibold text-slate-900">{translateUI("Notes")}</h2>
 
           <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-600">
             {vehicle.notes}
@@ -710,8 +701,7 @@ export default function VehicleViewPage({ params }: Props) {
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  Add Vehicle Expense
-                </h2>
+                  {translateUI("Add Vehicle Expense")} </h2>
                 <p className="mt-0.5 text-xs text-slate-500">
                   {vehicle.name} {vehicle.model || ""} {vehicle.chassisNumber ? `· ${vehicle.chassisNumber}` : ""}
                 </p>
@@ -730,15 +720,14 @@ export default function VehicleViewPage({ params }: Props) {
             <div className="space-y-4 p-5">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Expense Title
-                </label>
+                  {translateUI("Expense Title")} </label>
                 <input
                   type="text"
                   value={expenseForm.title}
                   onChange={(e) =>
                     setExpenseForm((c) => ({ ...c, title: e.target.value }))
                   }
-                  placeholder="e.g. Oil change, repair, detailing"
+                  placeholder={translateUI("e.g. Oil change, repair, detailing")}
                   className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
@@ -746,8 +735,7 @@ export default function VehicleViewPage({ params }: Props) {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Amount
-                  </label>
+                    {translateUI("Amount")} </label>
                   <input
                     type="number"
                     min="0.01"
@@ -756,15 +744,14 @@ export default function VehicleViewPage({ params }: Props) {
                     onChange={(e) =>
                       setExpenseForm((c) => ({ ...c, amount: e.target.value }))
                     }
-                    placeholder="0"
+                    placeholder={translateUI("0")}
                     className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                   />
                 </div>
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Expense Date
-                  </label>
+                    {translateUI("Expense Date")} </label>
                   <input
                     type="date"
                     value={expenseForm.expenseDate}
@@ -778,8 +765,7 @@ export default function VehicleViewPage({ params }: Props) {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Notes
-                  <span className="ml-1 font-normal text-slate-400">(optional)</span>
+                  {translateUI("Notes")} <span className="ml-1 font-normal text-slate-400">{translateUI("(optional)")}</span>
                 </label>
                 <textarea
                   rows={3}
@@ -787,7 +773,7 @@ export default function VehicleViewPage({ params }: Props) {
                   onChange={(e) =>
                     setExpenseForm((c) => ({ ...c, notes: e.target.value }))
                   }
-                  placeholder="Additional details..."
+                  placeholder={translateUI("Additional details...")}
                   className="w-full resize-none rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
@@ -800,8 +786,7 @@ export default function VehicleViewPage({ params }: Props) {
                 disabled={savingExpense}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
               >
-                Cancel
-              </button>
+                {translateUI("Cancel")} </button>
 
               <button
                 type="button"
@@ -809,7 +794,7 @@ export default function VehicleViewPage({ params }: Props) {
                 disabled={savingExpense}
                 className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {savingExpense ? "Saving..." : "Save Expense"}
+                {translateUI(savingExpense ? "Saving..." : "Save Expense")}
               </button>
             </div>
           </div>
@@ -852,17 +837,20 @@ function StatCard({
   iconClass: string;
   valueClass?: string;
 }) {
+  useLang();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm text-slate-500">{label}</p>
+          <p className="text-sm text-slate-500">{translateUI(label)}</p>
 
           <p className={`mt-2 truncate text-xl font-bold ${valueClass}`}>
-            {value}
+            {translateUI(value)}
           </p>
 
-          <p className="mt-1 text-xs text-slate-400">{description}</p>
+          <p className="mt-1 text-xs text-slate-400">
+            {translateUI(description)}
+          </p>
         </div>
 
         <div className={`shrink-0 rounded-xl p-3 ${iconClass}`}>{icon}</div>
@@ -880,11 +868,14 @@ function SummaryRow({
   value: string;
   valueClass?: string;
 }) {
+  useLang();
   return (
     <div className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
-      <span className="text-sm text-slate-500">{label}</span>
+      <span className="text-sm text-slate-500">{translateUI(label)}</span>
 
-      <span className={`text-sm font-semibold ${valueClass}`}>{value}</span>
+      <span className={`text-sm font-semibold ${valueClass}`}>
+        {translateUI(value)}
+      </span>
     </div>
   );
 }
@@ -898,16 +889,19 @@ function Detail({
   value?: string;
   mono?: boolean;
 }) {
+  useLang();
   return (
     <div>
-      <p className="text-xs font-medium text-slate-400">{label}</p>
+      <p className="text-xs font-medium text-slate-400">
+        {translateUI(label)}
+      </p>
 
       <p
         className={`mt-1.5 text-sm font-medium break-words text-slate-800 ${
           mono ? "font-mono" : ""
         }`}
       >
-        {value || "—"}
+        {translateUI(value || "—")}
       </p>
     </div>
   );

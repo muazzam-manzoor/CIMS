@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useState } from "react";
 import {
   CarFront,
@@ -61,6 +62,7 @@ function todayStr() {
 const emptyForm = () => ({ amount: "", date: todayStr(), method: "CASH", notes: "" });
 
 export default function PaymentsPage() {
+  useLang();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -241,10 +243,9 @@ export default function PaymentsPage() {
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Payments</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{translateUI("Payments")}</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Money received from customers, and money you gave back.
-          </p>
+            {translateUI("Money received from customers, and money you gave back.")} </p>
         </div>
 
         <div className="flex gap-2">
@@ -255,28 +256,25 @@ export default function PaymentsPage() {
             className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-60"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-            Refresh
-          </button>
+            {translateUI("Refresh")} </button>
           <button
             type="button"
             onClick={() => void openRefund()}
             className="flex items-center gap-2 rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-50"
           >
             <Undo2 className="h-4 w-4" />
-            Return payment
-          </button>
+            {translateUI("Return payment")} </button>
         </div>
       </div>
 
       {/* Summary */}
       <div className="grid gap-4 md:grid-cols-3">
-        <SummaryCard label="Received" value={formatMoney(totals.received)} tone="text-emerald-600" />
-        <SummaryCard label="Returned to customers" value={formatMoney(totals.returned)} tone="text-red-600" />
-        <SummaryCard label="Kept (received − returned)" value={formatMoney(totals.net)} tone="text-slate-900" />
+        <SummaryCard label={translateUI("Received")} value={formatMoney(totals.received)} tone="text-emerald-600" />
+        <SummaryCard label={translateUI("Returned to customers")} value={formatMoney(totals.returned)} tone="text-red-600" />
+        <SummaryCard label={translateUI("Kept (received − returned)")} value={formatMoney(totals.net)} tone="text-slate-900" />
       </div>
       <p className="-mt-3 text-xs text-slate-400">
-        Totals follow your search and filters. Money refunded when a whole sale is cancelled is shown on the Sales page under “Returned”.
-      </p>
+        {translateUI("Totals follow your search and filters. Money refunded when a whole sale is cancelled is shown on the Sales page under “Returned”.")} </p>
 
       {/* Filters */}
       <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -286,7 +284,7 @@ export default function PaymentsPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search car, model, chassis..."
+              placeholder={translateUI("Search car, model, chassis...")}
               className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pr-4 pl-10 text-sm outline-none focus:border-blue-500 focus:bg-white"
             />
           </div>
@@ -299,9 +297,9 @@ export default function PaymentsPage() {
             }}
             className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-blue-500"
           >
-            <option value="ALL">Received and returned</option>
-            <option value="RECEIVED">Received only</option>
-            <option value="REFUND">Returned only</option>
+            <option value="ALL">{translateUI("Received and returned")}</option>
+            <option value="RECEIVED">{translateUI("Received only")}</option>
+            <option value="REFUND">{translateUI("Returned only")}</option>
           </select>
 
           <select
@@ -312,7 +310,7 @@ export default function PaymentsPage() {
             }}
             className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-blue-500"
           >
-            <option value="ALL">Any method</option>
+            <option value="ALL">{translateUI("Any method")}</option>
             {METHODS.map(([v, l]) => (
               <option key={v} value={v}>
                 {l}
@@ -328,12 +326,12 @@ export default function PaymentsPage() {
           <table className="w-full min-w-[1000px]">
             <thead className="border-b border-slate-200 bg-slate-50">
               <tr className="text-left text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                <th className="px-5 py-4">Car</th>
-                <th className="px-5 py-4">What happened</th>
-                <th className="px-5 py-4">Amount</th>
-                <th className="px-5 py-4">Method</th>
-                <th className="px-5 py-4">Date</th>
-                <th className="px-5 py-4">Notes</th>
+                <th className="px-5 py-4">{translateUI("Car")}</th>
+                <th className="px-5 py-4">{translateUI("What happened")}</th>
+                <th className="px-5 py-4">{translateUI("Amount")}</th>
+                <th className="px-5 py-4">{translateUI("Method")}</th>
+                <th className="px-5 py-4">{translateUI("Date")}</th>
+                <th className="px-5 py-4">{translateUI("Notes")}</th>
                 <th className="px-5 py-4" />
               </tr>
             </thead>
@@ -342,14 +340,12 @@ export default function PaymentsPage() {
               {loading ? (
                 <tr>
                   <td colSpan={7} className="px-5 py-12 text-center text-sm text-slate-500">
-                    Loading payments...
-                  </td>
+                    {translateUI("Loading payments...")} </td>
                 </tr>
               ) : payments.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-5 py-12 text-center text-sm text-slate-500">
-                    No payments found.
-                  </td>
+                    {translateUI("No payments found.")} </td>
                 </tr>
               ) : (
                 payments.map((p) => {
@@ -379,16 +375,20 @@ export default function PaymentsPage() {
                             refund ? "bg-red-50 text-red-700" : "bg-emerald-50 text-emerald-700"
                           }`}
                         >
-                          {refund ? "Returned to customer" : "Payment received"}
+                          {translateUI(
+                            refund ? "Returned to customer" : "Payment received",
+                          )}
                         </span>
                       </td>
 
                       <td className={`px-5 py-4 text-sm font-bold ${refund ? "text-red-600" : "text-emerald-600"}`}>
-                        {refund ? "−" : "+"}
+                        {refund ? translateUI("−") : translateUI("+")}
                         {formatMoney(p.amount)}
                       </td>
 
-                      <td className="px-5 py-4 text-sm text-slate-600">{methodLabel(p.paymentMethod)}</td>
+                      <td className="px-5 py-4 text-sm text-slate-600">
+                        {translateUI(methodLabel(p.paymentMethod))}
+                      </td>
                       <td className="px-5 py-4 text-sm text-slate-600">{formatDate(p.paymentDate)}</td>
 
                       <td className="max-w-[220px] px-5 py-4 text-sm text-slate-500">
@@ -403,12 +403,11 @@ export default function PaymentsPage() {
                           <button
                             type="button"
                             onClick={() => void openRefund(p.saleId!._id)}
-                            title="Return money to this customer"
+                            title={translateUI("Return money to this customer")}
                             className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-slate-500 hover:bg-red-50 hover:text-red-600"
                           >
                             <Undo2 className="h-3.5 w-3.5" />
-                            Return
-                          </button>
+                            {translateUI("Return")} </button>
                         )}
                       </td>
                     </tr>
@@ -422,7 +421,7 @@ export default function PaymentsPage() {
         <div className="flex flex-col gap-3 border-t border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-500">
             {totalCount === 0
-              ? "No payments"
+              ? translateUI("No payments")
               : `Showing ${(page - 1) * limit + 1}–${Math.min(page * limit, totalCount)} of ${totalCount}`}
           </p>
 
@@ -434,10 +433,9 @@ export default function PaymentsPage() {
               className="flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40"
             >
               <ChevronLeft className="h-4 w-4" />
-              Previous
-            </button>
+              {translateUI("Previous")} </button>
             <span className="px-2 text-sm text-slate-600">
-              Page {page} of {totalPages}
+              {translateUI("Page")} {page} {translateUI("of")} {totalPages}
             </span>
             <button
               type="button"
@@ -445,8 +443,7 @@ export default function PaymentsPage() {
               disabled={loading || page >= totalPages}
               className="flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-40"
             >
-              Next
-              <ChevronRight className="h-4 w-4" />
+              {translateUI("Next")} <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -458,10 +455,9 @@ export default function PaymentsPage() {
           <div className="my-auto max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-2xl">
             <div className="sticky top-0 flex items-center justify-between border-b border-slate-100 bg-white px-5 py-4">
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">Return payment</h2>
+                <h2 className="text-lg font-semibold text-slate-900">{translateUI("Return payment")}</h2>
                 <p className="mt-0.5 text-xs text-slate-500">
-                  Give money back to a customer
-                </p>
+                  {translateUI("Give money back to a customer")} </p>
               </div>
               <button
                 type="button"
@@ -478,26 +474,24 @@ export default function PaymentsPage() {
               {!sale ? (
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Which car was the payment for?
-                  </label>
+                    {translateUI("Which car was the payment for?")} </label>
                   <div className="relative">
                     <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
                     <input
                       autoFocus
                       value={saleSearch}
                       onChange={(e) => setSaleSearch(e.target.value)}
-                      placeholder="Search car, model or chassis..."
+                      placeholder={translateUI("Search car, model or chassis...")}
                       className="h-11 w-full rounded-xl border border-slate-200 pr-3 pl-9 text-sm outline-none focus:border-sky-400"
                     />
                   </div>
 
                   <div className="mt-2 max-h-64 overflow-y-auto rounded-xl border border-slate-200">
                     {searching ? (
-                      <p className="px-3 py-6 text-center text-xs text-slate-400">Searching...</p>
+                      <p className="px-3 py-6 text-center text-xs text-slate-400">{translateUI("Searching...")}</p>
                     ) : results.length === 0 ? (
                       <p className="px-3 py-6 text-center text-xs text-slate-400">
-                        No sold car with a payment found.
-                      </p>
+                        {translateUI("No sold car with a payment found.")} </p>
                     ) : (
                       results.map((s) => (
                         <button
@@ -515,7 +509,7 @@ export default function PaymentsPage() {
                             </p>
                           </div>
                           <p className="shrink-0 text-xs text-slate-500">
-                            Paid {formatMoney(s.totalPaid)}
+                            {translateUI("Paid")} {formatMoney(s.totalPaid)}
                           </p>
                         </button>
                       ))
@@ -535,11 +529,10 @@ export default function PaymentsPage() {
                       disabled={saving}
                       className="text-xs font-semibold text-sky-700 hover:underline"
                     >
-                      Change
-                    </button>
+                      {translateUI("Change")} </button>
                   </div>
                   <div className="mt-3 flex justify-between text-sm">
-                    <span className="text-slate-500">Customer has paid so far</span>
+                    <span className="text-slate-500">{translateUI("Customer has paid so far")}</span>
                     <span className="font-semibold text-slate-900">{formatMoney(sale.totalPaid)}</span>
                   </div>
                 </div>
@@ -550,8 +543,7 @@ export default function PaymentsPage() {
                 <>
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      How much are you giving back?
-                    </label>
+                      {translateUI("How much are you giving back?")} </label>
                     <input
                       type="number"
                       min="0.01"
@@ -559,7 +551,7 @@ export default function PaymentsPage() {
                       step="0.01"
                       value={form.amount}
                       onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-                      placeholder="0"
+                      placeholder={translateUI("0")}
                       className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400"
                     />
                     <button
@@ -567,13 +559,12 @@ export default function PaymentsPage() {
                       onClick={() => setForm((f) => ({ ...f, amount: String(sale.totalPaid) }))}
                       className="mt-1 text-xs font-medium text-sky-700 hover:underline"
                     >
-                      Give back everything ({formatMoney(sale.totalPaid)})
-                    </button>
+                      {translateUI("Give back everything (")}{formatMoney(sale.totalPaid)}{translateUI(")")} </button>
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="mb-1.5 block text-sm font-medium text-slate-700">Date</label>
+                      <label className="mb-1.5 block text-sm font-medium text-slate-700">{translateUI("Date")}</label>
                       <input
                         type="date"
                         value={form.date}
@@ -583,8 +574,7 @@ export default function PaymentsPage() {
                     </div>
                     <div>
                       <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                        How did you give it?
-                      </label>
+                        {translateUI("How did you give it?")} </label>
                       <select
                         value={form.method}
                         onChange={(e) => setForm((f) => ({ ...f, method: e.target.value }))}
@@ -601,21 +591,18 @@ export default function PaymentsPage() {
 
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      Reason (optional)
-                    </label>
+                      {translateUI("Reason (optional)")} </label>
                     <textarea
                       rows={2}
                       value={form.notes}
                       onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
-                      placeholder="Why is the money being returned?"
+                      placeholder={translateUI("Why is the money being returned?")}
                       className="w-full resize-none rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400"
                     />
                   </div>
 
                   <p className="rounded-xl bg-amber-50 px-4 py-2.5 text-xs text-amber-700">
-                    The car stays sold, and the customer will owe this amount again. To cancel the whole sale and put the
-                    car back in stock, use <strong>Return Sale</strong> on the Sales page instead.
-                  </p>
+                    {translateUI("The car stays sold, and the customer will owe this amount again. To cancel the whole sale and put the car back in stock, use")} <strong>{translateUI("Return Sale")}</strong> {translateUI("on the Sales page instead.")} </p>
                 </>
               )}
             </div>
@@ -627,15 +614,14 @@ export default function PaymentsPage() {
                 disabled={saving}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 disabled:opacity-50"
               >
-                Cancel
-              </button>
+                {translateUI("Cancel")} </button>
               <button
                 type="button"
                 onClick={() => void submitRefund()}
                 disabled={saving || !sale}
                 className="h-10 rounded-xl bg-red-600 px-5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
               >
-                {saving ? "Saving..." : "Return money"}
+                {saving ? translateUI("Saving...") : translateUI("Return money")}
               </button>
             </div>
           </div>
@@ -646,6 +632,7 @@ export default function PaymentsPage() {
 }
 
 function SummaryCard({ label, value, tone }: { label: string; value: string; tone: string }) {
+  useLang();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">

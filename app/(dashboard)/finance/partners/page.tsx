@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -40,6 +41,7 @@ const emptyForm: PartnerForm = { name: "", phone: "", email: "", notes: "" };
 const LIMIT = 10;
 
 export default function PartnersPage() {
+  useLang();
   const confirm = useConfirm();
 
   const [partners, setPartners] = useState<Partner[]>([]);
@@ -206,16 +208,12 @@ export default function PartnersPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            Partners
-          </h1>
+            {translateUI("Partners")} </h1>
           <p className="mt-1 text-sm text-slate-500">
-            People who put money into your business. To record money they put
-            in or took out, use{" "}
+            {translateUI("People who put money into your business. To record money they put in or took out, use")}{" "}
             <Link href="/finance" className="font-medium text-sky-700 underline">
-              Money
-            </Link>
-            .
-          </p>
+              {translateUI("Money")} </Link>
+            {translateUI(".")} </p>
         </div>
 
         <button
@@ -224,15 +222,14 @@ export default function PartnersPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800"
         >
           <Plus className="h-4 w-4" />
-          Add partner
-        </button>
+          {translateUI("Add partner")} </button>
       </div>
 
       {/* Summary */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-slate-500">Partners</p>
+            <p className="text-sm font-medium text-slate-500">{translateUI("Partners")}</p>
             <Users className="h-5 w-5 text-slate-400" />
           </div>
           <p className="mt-3 text-2xl font-semibold text-slate-900">
@@ -243,16 +240,14 @@ export default function PartnersPage() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-slate-500">
-              Partners&apos; money in the business
-            </p>
+              {translateUI("Partners' money in the business")} </p>
             <Wallet className="h-5 w-5 text-slate-400" />
           </div>
           <p className="mt-3 text-2xl font-semibold text-slate-900">
-            {moneyInBusiness === null ? "—" : formatMoney(moneyInBusiness)}
+            {moneyInBusiness === null ? translateUI("—") : formatMoney(moneyInBusiness)}
           </p>
           <p className="mt-1 text-xs text-slate-400">
-            Money put in, minus money given back
-          </p>
+            {translateUI("Money put in, minus money given back")} </p>
         </div>
       </div>
 
@@ -270,7 +265,7 @@ export default function PartnersPage() {
           <input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search by name, phone or email..."
+            placeholder={translateUI("Search by name, phone or email...")}
             className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pr-3 pl-9 text-sm outline-none focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100"
           />
         </div>
@@ -278,8 +273,7 @@ export default function PartnersPage() {
           type="submit"
           className="h-10 rounded-xl bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-800"
         >
-          Search
-        </button>
+          {translateUI("Search")} </button>
         <button
           type="button"
           disabled={loading}
@@ -287,19 +281,17 @@ export default function PartnersPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
+          {translateUI("Refresh")} </button>
       </form>
 
       {/* Table */}
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <div className="flex flex-col gap-1 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold text-slate-900">
-            All partners
-          </h2>
+            {translateUI("All partners")} </h2>
           <p className="text-xs text-slate-500">
             {totalCount === 0
-              ? "No partners"
+              ? translateUI("No partners")
               : `Showing ${(page - 1) * LIMIT + 1}–${Math.min(
                   page * LIMIT,
                   totalCount,
@@ -315,12 +307,11 @@ export default function PartnersPage() {
           <div className="flex min-h-56 flex-col items-center justify-center px-5 text-center">
             <Users className="h-8 w-8 text-slate-300" />
             <p className="mt-3 text-sm font-semibold text-slate-900">
-              No partners found
-            </p>
+              {translateUI("No partners found")} </p>
             <p className="mt-1 text-sm text-slate-500">
               {search
-                ? "Try a different name."
-                : "Add your first partner to start recording their money."}
+                ? translateUI("Try a different name.")
+                : translateUI("Add your first partner to start recording their money.")}
             </p>
           </div>
         ) : (
@@ -385,7 +376,7 @@ export default function PartnersPage() {
                           <button
                             type="button"
                             onClick={() => openEdit(p)}
-                            title="Edit partner"
+                            title={translateUI("Edit partner")}
                             className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900"
                           >
                             <Pencil className="h-4 w-4" />
@@ -393,7 +384,7 @@ export default function PartnersPage() {
                           <button
                             type="button"
                             onClick={() => void handleDelete(p)}
-                            title="Delete partner"
+                            title={translateUI("Delete partner")}
                             className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -411,7 +402,7 @@ export default function PartnersPage() {
         {/* Pagination */}
         <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4">
           <p className="text-sm text-slate-500">
-            Page {page} of {totalPages}
+            {translateUI("Page")} {page} {translateUI("of")} {totalPages}
           </p>
           <div className="flex gap-2">
             <button
@@ -420,16 +411,14 @@ export default function PartnersPage() {
               disabled={loading || page <= 1}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm disabled:opacity-40"
             >
-              Previous
-            </button>
+              {translateUI("Previous")} </button>
             <button
               type="button"
               onClick={() => setPage((c) => c + 1)}
               disabled={loading || !hasMore}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm disabled:opacity-40"
             >
-              Next
-            </button>
+              {translateUI("Next")} </button>
           </div>
         </div>
       </div>
@@ -441,11 +430,10 @@ export default function PartnersPage() {
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  {editing ? "Edit partner" : "Add partner"}
+                  {editing ? translateUI("Edit partner") : translateUI("Add partner")}
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  Name and contact details.
-                </p>
+                  {translateUI("Name and contact details.")} </p>
               </div>
               <button
                 type="button"
@@ -460,14 +448,13 @@ export default function PartnersPage() {
             <div className="space-y-4 p-5">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Name *
-                </label>
+                  {translateUI("Name *")} </label>
                 <input
                   autoFocus
                   value={form.name}
                   onChange={(e) => set("name", e.target.value)}
                   maxLength={120}
-                  placeholder="Full name"
+                  placeholder={translateUI("Full name")}
                   className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
@@ -475,26 +462,24 @@ export default function PartnersPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Phone
-                  </label>
+                    {translateUI("Phone")} </label>
                   <input
                     value={form.phone}
                     onChange={(e) => set("phone", e.target.value)}
                     maxLength={30}
-                    placeholder="Phone number"
+                    placeholder={translateUI("Phone number")}
                     className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                   />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Email
-                  </label>
+                    {translateUI("Email")} </label>
                   <input
                     type="email"
                     value={form.email}
                     onChange={(e) => set("email", e.target.value)}
                     maxLength={254}
-                    placeholder="Email (optional)"
+                    placeholder={translateUI("Email (optional)")}
                     className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                   />
                 </div>
@@ -502,14 +487,13 @@ export default function PartnersPage() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Note (optional)
-                </label>
+                  {translateUI("Note (optional)")} </label>
                 <textarea
                   rows={3}
                   value={form.notes}
                   onChange={(e) => set("notes", e.target.value)}
                   maxLength={2000}
-                  placeholder="Anything you want to remember..."
+                  placeholder={translateUI("Anything you want to remember...")}
                   className="w-full resize-none rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
@@ -522,15 +506,14 @@ export default function PartnersPage() {
                 disabled={saving}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
               >
-                Cancel
-              </button>
+                {translateUI("Cancel")} </button>
               <button
                 type="button"
                 onClick={() => void handleSave()}
                 disabled={saving}
                 className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
               >
-                {saving ? "Saving..." : editing ? "Save changes" : "Add partner"}
+                {saving ? translateUI("Saving...") : editing ? translateUI("Save changes") : translateUI("Add partner")}
               </button>
             </div>
           </div>

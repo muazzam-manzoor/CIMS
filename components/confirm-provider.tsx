@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { AlertTriangle } from "lucide-react";
+import { translateUI, useLang } from "@/components/language-provider";
 
 type ConfirmOptions = {
   title: string;
@@ -37,6 +38,7 @@ export function ConfirmProvider({
 }: {
   children: React.ReactNode;
 }) {
+  useLang();
   const [options, setOptions] = useState<ConfirmOptions | null>(null);
   const resolverRef = useRef<((value: boolean) => void) | null>(null);
 
@@ -96,12 +98,12 @@ export function ConfirmProvider({
 
               <div className="min-w-0 flex-1">
                 <h2 className="text-base font-semibold text-slate-900">
-                  {options.title}
+                  {translateUI(options.title)}
                 </h2>
 
                 {options.description && (
                   <p className="mt-1 text-sm text-slate-500">
-                    {options.description}
+                    {translateUI(options.description)}
                   </p>
                 )}
               </div>
@@ -113,7 +115,7 @@ export function ConfirmProvider({
                 onClick={() => close(false)}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:bg-slate-50"
               >
-                {options.cancelText ?? "Cancel"}
+                {translateUI(options.cancelText ?? "Cancel")}
               </button>
 
               <button
@@ -126,7 +128,7 @@ export function ConfirmProvider({
                     : "bg-slate-900 hover:bg-slate-800"
                 }`}
               >
-                {options.confirmText ?? "Confirm"}
+                {translateUI(options.confirmText ?? "Confirm")}
               </button>
             </div>
           </div>

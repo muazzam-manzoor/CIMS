@@ -1,6 +1,8 @@
 
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
+import { getFormatLocale } from "@/lib/format";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowDownLeft,
@@ -123,7 +125,7 @@ function dateInput(value?: string | null) {
 }
 
 function formatPrice(value: number) {
-  return new Intl.NumberFormat("en-JP", {
+  return new Intl.NumberFormat(getFormatLocale(), {
     style: "currency",
     currency: "JPY",
     maximumFractionDigits: 0,
@@ -135,7 +137,7 @@ function formatDate(value: string) {
 
   return Number.isNaN(date.getTime())
     ? "—"
-    : date.toLocaleDateString("en-JP", {
+    : date.toLocaleDateString(getFormatLocale(), {
         day: "2-digit",
         month: "short",
         year: "numeric",
@@ -259,6 +261,7 @@ async function fetchAllPages<T>(
 }
 
 export default function FinanceTransactionsPage() {
+  useLang();
   const [transactions, setTransactions] = useState<FinanceTransaction[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -651,7 +654,7 @@ export default function FinanceTransactionsPage() {
     }
 
     const confirmed = window.confirm(
-      `Delete ${TYPE_LABELS[transaction.type]} for ${formatPrice(
+      `${translateUI("Delete")} ${translateUI(TYPE_LABELS[transaction.type])} — ${formatPrice(
         transaction.amount,
       )}?\n\nThe deletion will be recorded in the audit log.`,
     );
@@ -702,11 +705,9 @@ export default function FinanceTransactionsPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            Finance Transactions
-          </h1>
+            {translateUI("Finance Transactions")} </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Record and review partner capital, repayments, drawings, and business advances.
-          </p>
+            {translateUI("Record and review partner capital, repayments, drawings, and business advances.")} </p>
         </div>
 
         <button
@@ -715,8 +716,7 @@ export default function FinanceTransactionsPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800"
         >
           <Plus className="h-4 w-4" />
-          Add Transaction
-        </button>
+          {translateUI("Add Transaction")} </button>
       </div>
 
       {/* Summary */}
@@ -724,31 +724,27 @@ export default function FinanceTransactionsPage() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-slate-500">
-              Matching Transactions
-            </p>
+              {translateUI("Matching Transactions")} </p>
             <CalendarDays className="h-5 w-5 text-slate-400" />
           </div>
           <p className="mt-3 text-2xl font-semibold text-slate-900">
             {totalCount}
           </p>
           <p className="mt-1 text-xs text-slate-400">
-            All pages matching the active filters
-          </p>
+            {translateUI("All pages matching the active filters")} </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-slate-500">
-              Matching Recorded Amounts
-            </p>
+              {translateUI("Matching Recorded Amounts")} </p>
             <Wallet className="h-5 w-5 text-slate-400" />
           </div>
           <p className="mt-3 text-2xl font-semibold text-slate-900">
             {formatPrice(totalAmount)}
           </p>
           <p className="mt-1 text-xs text-slate-400">
-            Gross sum of transaction amounts, not net profit or cash balance
-          </p>
+            {translateUI("Gross sum of transaction amounts, not net profit or cash balance")} </p>
         </div>
       </div>
 
@@ -763,7 +759,7 @@ export default function FinanceTransactionsPage() {
             <input
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Search partner, reference, or notes..."
+              placeholder={translateUI("Search partner, reference, or notes...")}
               className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm outline-none focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100"
             />
           </div>
@@ -776,10 +772,10 @@ export default function FinanceTransactionsPage() {
             }}
             className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400"
           >
-            <option value="ALL">All Transaction Types</option>
+            <option value="ALL">{translateUI("All Transaction Types")}</option>
             {Object.entries(TYPE_LABELS).map(([type, label]) => (
               <option key={type} value={type}>
-                {label}
+                {translateUI(label)}
               </option>
             ))}
           </select>
@@ -792,9 +788,9 @@ export default function FinanceTransactionsPage() {
             }}
             className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400"
           >
-            <option value="VALID">Valid Only</option>
-            <option value="VOIDED">Voided Only</option>
-            <option value="ALL">All Statuses</option>
+            <option value="VALID">{translateUI("Valid Only")}</option>
+            <option value="VOIDED">{translateUI("Voided Only")}</option>
+            <option value="ALL">{translateUI("All Statuses")}</option>
           </select>
 
           <button
@@ -806,15 +802,13 @@ export default function FinanceTransactionsPage() {
             <RefreshCw
               className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
             />
-            Refresh
-          </button>
+            {translateUI("Refresh")} </button>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-3">
           <div>
             <label className="mb-1 block text-xs font-medium text-slate-500">
-              From Date
-            </label>
+              {translateUI("From Date")} </label>
             <input
               type="date"
               value={startDate}
@@ -825,8 +819,7 @@ export default function FinanceTransactionsPage() {
 
           <div>
             <label className="mb-1 block text-xs font-medium text-slate-500">
-              To Date
-            </label>
+              {translateUI("To Date")} </label>
             <input
               type="date"
               value={endDate}
@@ -841,8 +834,7 @@ export default function FinanceTransactionsPage() {
               type="submit"
               className="h-10 flex-1 rounded-xl bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-800"
             >
-              Apply Filters
-            </button>
+              {translateUI("Apply Filters")} </button>
             <button
               type="button"
               onClick={() => {
@@ -858,8 +850,7 @@ export default function FinanceTransactionsPage() {
               }}
               className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:bg-slate-50"
             >
-              Clear
-            </button>
+              {translateUI("Clear")} </button>
           </div>
         </div>
       </form>
@@ -868,11 +859,10 @@ export default function FinanceTransactionsPage() {
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <div className="flex flex-col gap-1 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold text-slate-900">
-            Transaction Ledger
-          </h2>
+            {translateUI("Transaction Ledger")} </h2>
           <p className="text-xs text-slate-500">
             {totalCount === 0
-              ? "0 records"
+              ? translateUI("0 records")
               : `Showing ${(page - 1) * LIMIT + 1}–${Math.min(
                   page * LIMIT,
                   totalCount,
@@ -888,8 +878,7 @@ export default function FinanceTransactionsPage() {
               onClick={() => void loadTransactions()}
               className="mt-3 text-sm font-medium text-slate-900 underline"
             >
-              Try again
-            </button>
+              {translateUI("Try again")} </button>
           </div>
         ) : loading ? (
           <div className="flex h-56 items-center justify-center">
@@ -899,11 +888,9 @@ export default function FinanceTransactionsPage() {
           <div className="flex min-h-56 flex-col items-center justify-center px-5 text-center">
             <Wallet className="h-8 w-8 text-slate-300" />
             <p className="mt-3 text-sm font-semibold text-slate-900">
-              No finance transactions found
-            </p>
+              {translateUI("No finance transactions found")} </p>
             <p className="mt-1 text-sm text-slate-500">
-              Add an entry or change your search filters.
-            </p>
+              {translateUI("Add an entry or change your search filters.")} </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -945,7 +932,7 @@ export default function FinanceTransactionsPage() {
 
                       <td className="px-4 py-4">
                         <p className="text-sm font-semibold text-slate-900">
-                          {TYPE_LABELS[transaction.type]}
+                          {translateUI(TYPE_LABELS[transaction.type])}
                         </p>
                         {transaction.notes && (
                           <p className="mt-1 max-w-64 truncate text-xs text-slate-400">
@@ -955,8 +942,8 @@ export default function FinanceTransactionsPage() {
                         {transaction.settlementType && (
                           <p className="mt-1 text-xs text-slate-500">
                             {transaction.settlementType === "EXPENSE"
-                              ? "Expense settlement"
-                              : "Cash returned"}
+                              ? translateUI("Expense settlement")
+                              : translateUI("Cash returned")}
                           </p>
                         )}
                       </td>
@@ -983,7 +970,7 @@ export default function FinanceTransactionsPage() {
                       </td>
 
                       <td className="whitespace-nowrap px-4 py-4 text-sm text-slate-600">
-                        {transaction.paymentMethod}
+                        {translateUI(transaction.paymentMethod)}
                       </td>
 
                       <td className="px-4 py-4">
@@ -994,7 +981,7 @@ export default function FinanceTransactionsPage() {
                               : "bg-red-50 text-red-700"
                           }`}
                         >
-                          {transaction.status}
+                          {translateUI(transaction.status)}
                         </span>
                       </td>
 
@@ -1003,8 +990,8 @@ export default function FinanceTransactionsPage() {
                           <button
                             type="button"
                             onClick={() => setDetail(transaction)}
-                            title="View details"
-                            aria-label="View transaction details"
+                            title={translateUI("View details")}
+                            aria-label={translateUI("View transaction details")}
                             className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100"
                           >
                             <Eye className="h-4 w-4" />
@@ -1014,8 +1001,8 @@ export default function FinanceTransactionsPage() {
                             <button
                               type="button"
                               onClick={() => openEdit(transaction)}
-                              title="Edit transaction"
-                              aria-label="Edit transaction"
+                              title={translateUI("Edit transaction")}
+                              aria-label={translateUI("Edit transaction")}
                               className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100"
                             >
                               <Pencil className="h-4 w-4" />
@@ -1026,8 +1013,8 @@ export default function FinanceTransactionsPage() {
                             <button
                               type="button"
                               onClick={() => void handleDelete(transaction)}
-                              title="Delete transaction"
-                              aria-label="Delete transaction"
+                              title={translateUI("Delete transaction")}
+                              aria-label={translateUI("Delete transaction")}
                               className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -1045,7 +1032,7 @@ export default function FinanceTransactionsPage() {
 
         <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4">
           <p className="text-sm text-slate-500">
-            Page {page} of {totalPages}
+            {translateUI("Page")} {page} {translateUI("of")} {totalPages}
           </p>
 
           <div className="flex gap-2">
@@ -1055,8 +1042,7 @@ export default function FinanceTransactionsPage() {
               disabled={loading || page <= 1}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm disabled:opacity-40"
             >
-              Previous
-            </button>
+              {translateUI("Previous")} </button>
 
             <button
               type="button"
@@ -1064,8 +1050,7 @@ export default function FinanceTransactionsPage() {
               disabled={loading || !hasMore}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm disabled:opacity-40"
             >
-              Next
-            </button>
+              {translateUI("Next")} </button>
           </div>
         </div>
       </div>
@@ -1085,18 +1070,17 @@ export default function FinanceTransactionsPage() {
                   id="transaction-modal-title"
                   className="text-lg font-semibold text-slate-900"
                 >
-                  {editing ? "Edit Transaction" : "Add Transaction"}
+                  {editing ? translateUI("Edit Transaction") : translateUI("Add Transaction")}
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  Amounts are validated by the server before saving.
-                </p>
+                  {translateUI("Amounts are validated by the server before saving.")} </p>
               </div>
 
               <button
                 type="button"
                 onClick={closeModal}
                 disabled={saving}
-                aria-label="Close modal"
+                aria-label={translateUI("Close modal")}
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100"
               >
                 <X className="h-5 w-5" />
@@ -1107,8 +1091,7 @@ export default function FinanceTransactionsPage() {
               {!editing && (
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Transaction Type *
-                  </label>
+                    {translateUI("Transaction Type *")} </label>
 
                   <select
                     value={form.type}
@@ -1128,15 +1111,14 @@ export default function FinanceTransactionsPage() {
                   >
                     {CREATABLE_TYPES.map((type) => (
                       <option key={type} value={type}>
-                        {TYPE_LABELS[type]}
+                        {translateUI(TYPE_LABELS[type])}
                       </option>
                     ))}
                   </select>
 
                   {form.type === "BUSINESS_ADVANCE_GIVEN" && (
                     <p className="mt-2 text-xs text-slate-500">
-                      Use this for temporary money given to a partner for a business purpose.
-                    </p>
+                      {translateUI("Use this for temporary money given to a partner for a business purpose.")} </p>
                   )}
                 </div>
               )}
@@ -1144,19 +1126,17 @@ export default function FinanceTransactionsPage() {
               {editing && (
                 <div className="rounded-xl bg-slate-50 p-3">
                   <p className="text-sm font-semibold text-slate-900">
-                    {TYPE_LABELS[editing.type]}
+                    {translateUI(TYPE_LABELS[editing.type])}
                   </p>
                   <p className="mt-1 text-xs text-slate-500">
-                    Transaction type and linked account cannot be changed here.
-                  </p>
+                    {translateUI("Transaction type and linked account cannot be changed here.")} </p>
                 </div>
               )}
 
               {requiresPartner(form.type) && (
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Partner *
-                  </label>
+                    {translateUI("Partner *")} </label>
                   <select
                     value={form.partnerId}
                     disabled={Boolean(editing)}
@@ -1165,7 +1145,7 @@ export default function FinanceTransactionsPage() {
                     }
                     className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400 disabled:bg-slate-100"
                   >
-                    <option value="">Select partner</option>
+                    <option value="">{translateUI("Select partner")}</option>
                     {partners.map((partner) => (
                       <option key={partner._id} value={partner._id}>
                         {partner.name}
@@ -1174,8 +1154,7 @@ export default function FinanceTransactionsPage() {
                   </select>
                   {partners.length === 0 && (
                     <p className="mt-1 text-xs text-amber-700">
-                      Add a partner first, then record the transaction.
-                    </p>
+                      {translateUI("Add a partner first, then record the transaction.")} </p>
                   )}
                 </div>
               )}
@@ -1183,8 +1162,7 @@ export default function FinanceTransactionsPage() {
               {requiresLoan(form.type) && (
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Loan *
-                  </label>
+                    {translateUI("Loan *")} </label>
 
                   <select
                     value={form.loanId}
@@ -1194,10 +1172,10 @@ export default function FinanceTransactionsPage() {
                     }
                     className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400 disabled:bg-slate-100"
                   >
-                    <option value="">Select active loan</option>
+                    <option value="">{translateUI("Select active loan")}</option>
                     {applicableLoans.map((loan) => (
                       <option key={loan._id} value={loan._id}>
-                        {loan.counterpartyName} — Outstanding{" "}
+                        {loan.counterpartyName} {translateUI("— Outstanding")}{" "}
                         {formatPrice(loan.outstandingPrincipal)}
                       </option>
                     ))}
@@ -1205,14 +1183,13 @@ export default function FinanceTransactionsPage() {
 
                   {selectedLoan && (
                     <p className="mt-1 text-xs text-slate-500">
-                      Outstanding: {formatPrice(selectedLoan.outstandingPrincipal)}
+                      {translateUI("Outstanding:")} {formatPrice(selectedLoan.outstandingPrincipal)}
                     </p>
                   )}
 
                   {applicableLoans.length === 0 && (
                     <p className="mt-1 text-xs text-amber-700">
-                      No active loan of this type has an outstanding balance.
-                    </p>
+                      {translateUI("No active loan of this type has an outstanding balance.")} </p>
                   )}
                 </div>
               )}
@@ -1221,8 +1198,7 @@ export default function FinanceTransactionsPage() {
                 <>
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      Original Business Advance *
-                    </label>
+                      {translateUI("Original Business Advance *")} </label>
                     <select
                       value={form.relatedTransactionId}
                       disabled={Boolean(editing)}
@@ -1231,10 +1207,10 @@ export default function FinanceTransactionsPage() {
                       }
                       className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400 disabled:bg-slate-100"
                     >
-                      <option value="">Select unsettled advance</option>
+                      <option value="">{translateUI("Select unsettled advance")}</option>
                       {advanceOptions.map((advance) => (
                         <option key={advance._id} value={advance._id}>
-                          {partnerName(advance.partnerId)} — Remaining{" "}
+                          {partnerName(advance.partnerId)} {translateUI("— Remaining")}{" "}
                           {formatPrice(advance.outstandingAmount)}
                         </option>
                       ))}
@@ -1242,7 +1218,7 @@ export default function FinanceTransactionsPage() {
 
                     {selectedAdvance && (
                       <p className="mt-1 text-xs text-slate-500">
-                        Remaining to settle:{" "}
+                        {translateUI("Remaining to settle:")}{" "}
                         {formatPrice(selectedAdvance.outstandingAmount)}
                       </p>
                     )}
@@ -1250,8 +1226,7 @@ export default function FinanceTransactionsPage() {
 
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      Settlement Type *
-                    </label>
+                      {translateUI("Settlement Type *")} </label>
                     <select
                       value={form.settlementType}
                       onChange={(event) =>
@@ -1262,13 +1237,12 @@ export default function FinanceTransactionsPage() {
                       }
                       className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400"
                     >
-                      <option value="EXPENSE">Business expense supported by records</option>
-                      <option value="CASH_RETURN">Unused cash returned</option>
+                      <option value="EXPENSE">{translateUI("Business expense supported by records")}</option>
+                      <option value="CASH_RETURN">{translateUI("Unused cash returned")}</option>
                     </select>
 
                     <p className="mt-1 text-xs text-slate-500">
-                      Record the actual expense in General Expenses or Vehicle Expenses separately, where applicable. Do not count the same cost twice.
-                    </p>
+                      {translateUI("Record the actual expense in General Expenses or Vehicle Expenses separately, where applicable. Do not count the same cost twice.")} </p>
                   </div>
                 </>
               )}
@@ -1276,8 +1250,7 @@ export default function FinanceTransactionsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Amount (JPY) *
-                  </label>
+                    {translateUI("Amount (JPY) *")} </label>
                   <input
                     type="number"
                     min="0.01"
@@ -1286,15 +1259,14 @@ export default function FinanceTransactionsPage() {
                     onChange={(event) =>
                       setField("amount", event.target.value)
                     }
-                    placeholder="0"
+                    placeholder={translateUI("0")}
                     className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400"
                   />
                 </div>
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Transaction Date *
-                  </label>
+                    {translateUI("Transaction Date *")} </label>
                   <input
                     type="date"
                     value={form.transactionDate}
@@ -1309,8 +1281,7 @@ export default function FinanceTransactionsPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Payment Method
-                  </label>
+                    {translateUI("Payment Method")} </label>
                   <select
                     value={form.paymentMethod}
                     onChange={(event) =>
@@ -1331,15 +1302,14 @@ export default function FinanceTransactionsPage() {
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Reference
-                  </label>
+                    {translateUI("Reference")} </label>
                   <input
                     value={form.reference}
                     onChange={(event) =>
                       setField("reference", event.target.value)
                     }
                     maxLength={150}
-                    placeholder="Optional receipt/reference"
+                    placeholder={translateUI("Optional receipt/reference")}
                     className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400"
                   />
                 </div>
@@ -1347,8 +1317,7 @@ export default function FinanceTransactionsPage() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Notes
-                </label>
+                  {translateUI("Notes")} </label>
                 <textarea
                   rows={3}
                   value={form.notes}
@@ -1356,7 +1325,7 @@ export default function FinanceTransactionsPage() {
                     setField("notes", event.target.value)
                   }
                   maxLength={2000}
-                  placeholder="Reason, purpose, or additional details..."
+                  placeholder={translateUI("Reason, purpose, or additional details...")}
                   className="w-full resize-y rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400"
                 />
               </div>
@@ -1369,8 +1338,7 @@ export default function FinanceTransactionsPage() {
                 disabled={saving}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 disabled:opacity-50"
               >
-                Cancel
-              </button>
+                {translateUI("Cancel")} </button>
               <button
                 type="button"
                 onClick={() => void handleSave()}
@@ -1378,10 +1346,10 @@ export default function FinanceTransactionsPage() {
                 className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white disabled:opacity-50"
               >
                 {saving
-                  ? "Saving..."
+                  ? translateUI("Saving...")
                   : editing
-                    ? "Update Transaction"
-                    : "Save Transaction"}
+                    ? translateUI("Update Transaction")
+                    : translateUI("Save Transaction")}
               </button>
             </div>
           </div>
@@ -1403,16 +1371,15 @@ export default function FinanceTransactionsPage() {
                   id="transaction-detail-title"
                   className="text-lg font-semibold text-slate-900"
                 >
-                  Transaction Details
-                </h2>
+                  {translateUI("Transaction Details")} </h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  {TYPE_LABELS[detail.type]}
+                  {translateUI(TYPE_LABELS[detail.type])}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setDetail(null)}
-                aria-label="Close details"
+                aria-label={translateUI("Close details")}
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100"
               >
                 <X className="h-5 w-5" />
@@ -1435,7 +1402,7 @@ export default function FinanceTransactionsPage() {
               ].map(([label, value]) => (
                 <div key={label} className="min-w-0">
                   <p className="text-xs font-medium text-slate-500">
-                    {label}
+                    {translateUI(label)}
                   </p>
                   <p className="mt-1 break-words text-sm font-medium text-slate-900">
                     {value}
@@ -1445,8 +1412,7 @@ export default function FinanceTransactionsPage() {
 
               <div className="sm:col-span-2">
                 <p className="text-xs font-medium text-slate-500">
-                  Notes
-                </p>
+                  {translateUI("Notes")} </p>
                 <p className="mt-1 whitespace-pre-wrap text-sm text-slate-700">
                   {detail.notes || "No notes"}
                 </p>
@@ -1459,8 +1425,7 @@ export default function FinanceTransactionsPage() {
                 onClick={() => setDetail(null)}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600"
               >
-                Close
-              </button>
+                {translateUI("Close")} </button>
             </div>
           </div>
         </div>

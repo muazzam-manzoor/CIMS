@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useState } from "react";
 import {
   CarFront,
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useConfirm } from "@/components/confirm-provider";
+import { getFormatLocale } from "@/lib/format";
 
 type Vehicle = {
   _id: string;
@@ -53,7 +55,7 @@ const emptyForm: FormData = {
 };
 
 function formatPrice(value: number) {
-  return new Intl.NumberFormat("en-JP", {
+  return new Intl.NumberFormat(getFormatLocale(), {
     style: "currency",
     currency: "JPY",
     maximumFractionDigits: 0,
@@ -61,7 +63,7 @@ function formatPrice(value: number) {
 }
 
 function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("en-JP", {
+  return new Date(value).toLocaleDateString(getFormatLocale(), {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -69,6 +71,7 @@ function formatDate(value: string) {
 }
 
 export default function VehicleExpensesPage() {
+  useLang();
   // Expenses list (server-side pagination + search)
   const [expenses, setExpenses] = useState<VehicleExpense[]>([]);
   const [loading, setLoading] = useState(true);
@@ -338,12 +341,10 @@ export default function VehicleExpensesPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            Vehicle Expenses
-          </h1>
+            {translateUI("Vehicle Expenses")} </h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Track expenses spent on individual vehicles.
-          </p>
+            {translateUI("Track expenses spent on individual vehicles.")} </p>
         </div>
 
         <button
@@ -352,38 +353,33 @@ export default function VehicleExpensesPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
         >
           <Plus className="h-4 w-4" />
-          Add Expense
-        </button>
+          {translateUI("Add Expense")} </button>
       </div>
 
       {/* Summary */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
           <p className="text-sm font-medium text-slate-500">
-            Total Expenses
-          </p>
+            {translateUI("Total Expenses")} </p>
 
           <p className="mt-2 text-2xl font-semibold text-slate-900">
             {formatPrice(totalAmount)}
           </p>
 
           <p className="mt-1 text-xs text-slate-400">
-            Across all matching records
-          </p>
+            {translateUI("Across all matching records")} </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
           <p className="text-sm font-medium text-slate-500">
-            Expense Entries
-          </p>
+            {translateUI("Expense Entries")} </p>
 
           <p className="mt-2 text-2xl font-semibold text-slate-900">
             {totalCount}
           </p>
 
           <p className="mt-1 text-xs text-slate-400">
-            Vehicle expense records
-          </p>
+            {translateUI("Vehicle expense records")} </p>
         </div>
       </div>
 
@@ -397,7 +393,7 @@ export default function VehicleExpensesPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search vehicle, chassis, registration or expense..."
+              placeholder={translateUI("Search vehicle, chassis, registration or expense...")}
               className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pr-3 pl-9 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100"
             />
           </div>
@@ -411,8 +407,7 @@ export default function VehicleExpensesPage() {
             <RefreshCw
               className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
             />
-            Refresh
-          </button>
+            {translateUI("Refresh")} </button>
         </div>
       </div>
 
@@ -421,11 +416,11 @@ export default function VehicleExpensesPage() {
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <div>
             <h2 className="text-sm font-semibold text-slate-900">
-              Vehicle Expense Records
-            </h2>
+              {translateUI("Vehicle Expense Records")} </h2>
 
             <p className="mt-0.5 text-xs text-slate-500">
-              {totalCount} record{totalCount !== 1 ? "s" : ""}
+              {totalCount}{" "}
+              {translateUI(totalCount === 1 ? "record" : "records")}
             </p>
           </div>
         </div>
@@ -441,13 +436,12 @@ export default function VehicleExpensesPage() {
             </div>
 
             <h3 className="mt-4 text-sm font-semibold text-slate-900">
-              No vehicle expenses found
-            </h3>
+              {translateUI("No vehicle expenses found")} </h3>
 
             <p className="mt-1 max-w-sm text-sm text-slate-500">
               {debouncedSearch
-                ? "Try changing your search."
-                : "Add your first vehicle expense to start tracking vehicle investment."}
+                ? translateUI("Try changing your search.")
+                : translateUI("Add your first vehicle expense to start tracking vehicle investment.")}
             </p>
           </div>
         ) : (
@@ -456,28 +450,22 @@ export default function VehicleExpensesPage() {
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/80">
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Vehicle
-                  </th>
+                    {translateUI("Vehicle")} </th>
 
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Expense
-                  </th>
+                    {translateUI("Expense")} </th>
 
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Amount
-                  </th>
+                    {translateUI("Amount")} </th>
 
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Date
-                  </th>
+                    {translateUI("Date")} </th>
 
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Notes
-                  </th>
+                    {translateUI("Notes")} </th>
 
                   <th className="px-5 py-3 text-right text-xs font-semibold text-slate-500">
-                    Actions
-                  </th>
+                    {translateUI("Actions")} </th>
                 </tr>
               </thead>
 
@@ -495,13 +483,13 @@ export default function VehicleExpensesPage() {
                         </p>
 
                         <p className="mt-0.5 text-xs text-slate-500">
-                          {expense.vehicleId?.year} ·{" "}
+                          {expense.vehicleId?.year} {translateUI("·")}{" "}
                           {expense.vehicleId?.chassisNumber}
                         </p>
 
                         {expense.vehicleId?.registrationNumber && (
                           <p className="mt-0.5 text-xs text-slate-400">
-                            Reg: {expense.vehicleId.registrationNumber}
+                            {translateUI("Reg:")} {expense.vehicleId.registrationNumber}
                           </p>
                         )}
                       </div>
@@ -533,7 +521,7 @@ export default function VehicleExpensesPage() {
                           type="button"
                           onClick={() => openEditModal(expense)}
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-                          title="Edit expense"
+                          title={translateUI("Edit expense")}
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -542,7 +530,7 @@ export default function VehicleExpensesPage() {
                           type="button"
                           onClick={() => handleDelete(expense)}
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600"
-                          title="Delete expense"
+                          title={translateUI("Delete expense")}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -559,7 +547,7 @@ export default function VehicleExpensesPage() {
         <div className="flex flex-col gap-3 border-t border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-500">
             {totalCount === 0
-              ? "No records"
+              ? translateUI("No records")
               : `Showing ${(page - 1) * limit + 1}–${Math.min(
                   page * limit,
                   totalCount
@@ -574,11 +562,10 @@ export default function VehicleExpensesPage() {
               className="flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ChevronLeft className="h-4 w-4" />
-              Previous
-            </button>
+              {translateUI("Previous")} </button>
 
             <span className="px-2 text-sm text-slate-600">
-              Page {page} of {totalPages}
+              {translateUI("Page")} {page} {translateUI("of")} {totalPages}
             </span>
 
             <button
@@ -589,8 +576,7 @@ export default function VehicleExpensesPage() {
               disabled={loading || page >= totalPages || totalCount === 0}
               className="flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Next
-              <ChevronRight className="h-4 w-4" />
+              {translateUI("Next")} <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -604,13 +590,12 @@ export default function VehicleExpensesPage() {
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
                   {editingExpense
-                    ? "Edit Vehicle Expense"
-                    : "Add Vehicle Expense"}
+                    ? translateUI("Edit Vehicle Expense")
+                    : translateUI("Add Vehicle Expense")}
                 </h2>
 
                 <p className="mt-0.5 text-xs text-slate-500">
-                  Record a cost associated with a vehicle.
-                </p>
+                  {translateUI("Record a cost associated with a vehicle.")} </p>
               </div>
 
               <button
@@ -627,8 +612,7 @@ export default function VehicleExpensesPage() {
               {/* Vehicle */}
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Vehicle
-                </label>
+                  {translateUI("Vehicle")} </label>
 
                 <div className="relative">
                   <button
@@ -652,13 +636,12 @@ export default function VehicleExpensesPage() {
 
                           <span className="text-slate-400">
                             {" "}
-                            · {selectedVehicle.chassisNumber}
+                            {translateUI("·")} {selectedVehicle.chassisNumber}
                           </span>
                         </span>
                       ) : (
                         <span className="text-sm text-slate-400">
-                          Search vehicle...
-                        </span>
+                          {translateUI("Search vehicle...")} </span>
                       )}
                     </div>
 
@@ -681,7 +664,7 @@ export default function VehicleExpensesPage() {
                             autoFocus
                             value={vehicleSearch}
                             onChange={(e) => setVehicleSearch(e.target.value)}
-                            placeholder="Search name, chassis or registration..."
+                            placeholder={translateUI("Search name, chassis or registration...")}
                             className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 pr-3 pl-8 text-sm outline-none focus:border-sky-400 focus:bg-white"
                           />
                         </div>
@@ -691,12 +674,10 @@ export default function VehicleExpensesPage() {
                       <div className="max-h-52 overflow-y-auto p-1">
                         {vehiclesLoading ? (
                           <p className="px-3 py-5 text-center text-xs text-slate-400">
-                            Searching...
-                          </p>
+                            {translateUI("Searching...")} </p>
                         ) : vehicles.length === 0 ? (
                           <p className="px-3 py-5 text-center text-xs text-slate-400">
-                            No vehicles found
-                          </p>
+                            {translateUI("No vehicles found")} </p>
                         ) : (
                           vehicles.map((vehicle) => {
                             const selected = vehicle._id === form.vehicleId;
@@ -734,7 +715,7 @@ export default function VehicleExpensesPage() {
                                   </p>
 
                                   <p className="truncate text-xs text-slate-400">
-                                    {vehicle.year} · {vehicle.chassisNumber}
+                                    {vehicle.year} {translateUI("·")} {vehicle.chassisNumber}
                                     {vehicle.registrationNumber
                                       ? ` · ${vehicle.registrationNumber}`
                                       : ""}
@@ -757,8 +738,7 @@ export default function VehicleExpensesPage() {
               {/* Title */}
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Expense Title
-                </label>
+                  {translateUI("Expense Title")} </label>
 
                 <input
                   type="text"
@@ -769,7 +749,7 @@ export default function VehicleExpensesPage() {
                       title: e.target.value,
                     }))
                   }
-                  placeholder="e.g. Oil change, repair, detailing"
+                  placeholder={translateUI("e.g. Oil change, repair, detailing")}
                   className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
@@ -778,8 +758,7 @@ export default function VehicleExpensesPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Amount
-                  </label>
+                    {translateUI("Amount")} </label>
 
                   <input
                     type="number"
@@ -792,15 +771,14 @@ export default function VehicleExpensesPage() {
                         amount: e.target.value,
                       }))
                     }
-                    placeholder="0"
+                    placeholder={translateUI("0")}
                     className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                   />
                 </div>
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Expense Date
-                  </label>
+                    {translateUI("Expense Date")} </label>
 
                   <input
                     type="date"
@@ -819,10 +797,8 @@ export default function VehicleExpensesPage() {
               {/* Notes */}
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Notes
-                  <span className="ml-1 font-normal text-slate-400">
-                    (optional)
-                  </span>
+                  {translateUI("Notes")} <span className="ml-1 font-normal text-slate-400">
+                    {translateUI("(optional)")} </span>
                 </label>
 
                 <textarea
@@ -834,7 +810,7 @@ export default function VehicleExpensesPage() {
                     }))
                   }
                   rows={3}
-                  placeholder="Additional details..."
+                  placeholder={translateUI("Additional details...")}
                   className="w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
@@ -847,8 +823,7 @@ export default function VehicleExpensesPage() {
                 disabled={saving}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
               >
-                Cancel
-              </button>
+                {translateUI("Cancel")} </button>
 
               <button
                 type="button"
@@ -857,10 +832,10 @@ export default function VehicleExpensesPage() {
                 className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving
-                  ? "Saving..."
+                  ? translateUI("Saving...")
                   : editingExpense
-                    ? "Update Expense"
-                    : "Save Expense"}
+                    ? translateUI("Update Expense")
+                    : translateUI("Save Expense")}
               </button>
             </div>
           </div>

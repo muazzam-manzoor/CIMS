@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CarFront, Search } from "lucide-react";
@@ -27,6 +28,7 @@ export function VehicleSearch({
   autoFocus?: boolean;
   onSelect?: () => void;
 }) {
+  useLang();
   const router = useRouter();
 
   const [query, setQuery] = useState("");
@@ -130,8 +132,8 @@ export function VehicleSearch({
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
-        placeholder="Search car by name or model..."
-        aria-label="Search cars"
+        placeholder={translateUI("Search car by name or model...")}
+        aria-label={translateUI("Search cars")}
         className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pr-3 pl-9 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100"
       />
 
@@ -140,12 +142,10 @@ export function VehicleSearch({
           <div className="max-h-80 overflow-y-auto p-1">
             {loading ? (
               <p className="px-3 py-6 text-center text-xs text-slate-400">
-                Searching...
-              </p>
+                {translateUI("Searching...")} </p>
             ) : results.length === 0 ? (
               <p className="px-3 py-6 text-center text-xs text-slate-400">
-                No cars found
-              </p>
+                {translateUI("No cars found")} </p>
             ) : (
               results.map((car, index) => {
                 const status = STATUS[car.status];
@@ -169,7 +169,8 @@ export function VehicleSearch({
                       </p>
                       <p className="truncate text-xs text-slate-400">
                         {[car.color, car.chassisNumber, car.registrationNumber]
-                          .filter(Boolean)
+                          .filter((detail): detail is string => Boolean(detail))
+                          .map((detail) => translateUI(detail))
                           .join(" · ") || "No details"}
                       </p>
                     </div>
@@ -177,7 +178,7 @@ export function VehicleSearch({
                     <span
                       className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${status.cls}`}
                     >
-                      {status.label}
+                      {translateUI(status.label)}
                     </span>
                   </button>
                 );

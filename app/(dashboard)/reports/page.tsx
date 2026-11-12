@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CarFront } from "lucide-react";
 import { toast } from "sonner";
@@ -77,6 +78,7 @@ function rangeFor(preset: Preset) {
 }
 
 export default function ReportsPage() {
+  useLang();
   const initial = rangeFor("this_month");
 
   const [preset, setPreset] = useState<Preset>("this_month");
@@ -135,10 +137,9 @@ export default function ReportsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Reports</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{translateUI("Reports")}</h1>
         <p className="mt-1 text-sm text-slate-500">
-          How your business did in the time you choose.
-        </p>
+          {translateUI("How your business did in the time you choose.")} </p>
       </div>
 
       {/* Period */}
@@ -163,7 +164,7 @@ export default function ReportsPage() {
         {preset === "custom" && (
           <div className="mt-4 grid max-w-md gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-medium text-slate-500">From</label>
+              <label className="mb-1 block text-xs font-medium text-slate-500">{translateUI("From")}</label>
               <input
                 type="date"
                 value={from}
@@ -172,7 +173,7 @@ export default function ReportsPage() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-slate-500">To</label>
+              <label className="mb-1 block text-xs font-medium text-slate-500">{translateUI("To")}</label>
               <input
                 type="date"
                 value={to}
@@ -184,11 +185,11 @@ export default function ReportsPage() {
         )}
 
         {dateError && (
-          <p className="mt-3 text-xs text-red-600">The “From” date must be before the “To” date.</p>
+          <p className="mt-3 text-xs text-red-600">{translateUI("The “From” date must be before the “To” date.")}</p>
         )}
         {from && to && !dateError && (
           <p className="mt-3 text-xs text-slate-400">
-            Showing {formatDate(from)} to {formatDate(to)}
+            {translateUI("Showing")} {formatDate(from)} {translateUI("to")} {formatDate(to)}
           </p>
         )}
       </div>
@@ -198,7 +199,7 @@ export default function ReportsPage() {
           {loading ? (
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-sky-600" />
           ) : (
-            <p className="text-sm text-slate-500">No report to show.</p>
+            <p className="text-sm text-slate-500">{translateUI("No report to show.")}</p>
           )}
         </div>
       ) : (
@@ -206,60 +207,61 @@ export default function ReportsPage() {
           {/* Headline numbers */}
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <Card
-              label="Your profit"
+              label={translateUI("Your profit")}
               value={formatMoney(s.netProfit)}
-              note="After shop expenses"
+              note={translateUI("After shop expenses")}
               valueClass={s.netProfit >= 0 ? "text-emerald-600" : "text-red-600"}
             />
             <Card
-              label="Cars sold"
+              label={translateUI("Cars sold")}
               value={String(s.salesCount)}
               note={`Worth ${formatMoney(s.salesTotal)}`}
             />
             <Card
-              label="Money received"
+              label={translateUI("Money received")}
               value={formatMoney(s.netReceived)}
-              note={s.refunded > 0 ? `After returning ${formatMoney(s.refunded)}` : "From customers"}
+              note={s.refunded > 0 ? `After returning ${formatMoney(s.refunded)}` : translateUI("From customers")}
             />
             <Card
-              label="Customers still owe"
+              label={translateUI("Customers still owe")}
               value={formatMoney(s.outstanding)}
-              note="On cars sold in this time"
+              note={translateUI("On cars sold in this time")}
               valueClass={s.outstanding > 0 ? "text-amber-600" : undefined}
             />
           </div>
 
           {s.returnsCount > 0 && (
             <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              {s.returnsCount} sale{s.returnsCount === 1 ? " was" : "s were"} cancelled in this time and{" "}
-              {formatMoney(s.returnsRefunded)} was refunded. Those cars are not counted as sold.
+              {translateUI(
+                `${s.returnsCount} sale${s.returnsCount === 1 ? "" : "s"} ${
+                  s.returnsCount === 1 ? "was" : "were"
+                } cancelled in this time and ${formatMoney(s.returnsRefunded)} was refunded. Those cars are not counted as sold.`,
+              )}
             </p>
           )}
 
           {/* Profit + shop expenses */}
           <div className="grid gap-5 lg:grid-cols-2">
-            <Panel title="How your profit is made" subtitle="Cars sold in this time">
+            <Panel title={translateUI("How your profit is made")} subtitle={translateUI("Cars sold in this time")}>
               <div className="space-y-3">
-                <Line label="Cars sold for" value={s.salesTotal} />
-                <Line label="Minus: what those cars cost to buy" value={-s.carsCost} />
-                <Line label="Minus: repairs and expenses on those cars" value={-s.carExpensesOnSold} />
+                <Line label={translateUI("Cars sold for")} value={s.salesTotal} />
+                <Line label={translateUI("Minus: what those cars cost to buy")} value={-s.carsCost} />
+                <Line label={translateUI("Minus: repairs and expenses on those cars")} value={-s.carExpensesOnSold} />
                 <div className="border-t border-slate-100 pt-3">
-                  <Line label="Profit on cars" value={s.grossProfit} strong tone />
+                  <Line label={translateUI("Profit on cars")} value={s.grossProfit} strong tone />
                 </div>
-                <Line label="Minus: shop and office expenses" value={-s.shopExpenses} />
+                <Line label={translateUI("Minus: shop and office expenses")} value={-s.shopExpenses} />
                 <div className="rounded-xl bg-slate-50 px-4 py-3">
-                  <Line label="Your profit" value={s.netProfit} strong tone />
+                  <Line label={translateUI("Your profit")} value={s.netProfit} strong tone />
                 </div>
               </div>
               <p className="mt-4 text-xs text-slate-400">
-                Money spent on cars you haven&apos;t sold yet is not a loss. It is counted when the car is sold.
-                Money from partners or loans is never counted as profit.
-              </p>
+                {translateUI("Money spent on cars you haven't sold yet is not a loss. It is counted when the car is sold. Money from partners or loans is never counted as profit.")} </p>
             </Panel>
 
-            <Panel title="Where shop money went" subtitle="Shop and office expenses">
+            <Panel title={translateUI("Where shop money went")} subtitle={translateUI("Shop and office expenses")}>
               {report.shopExpenses.length === 0 ? (
-                <p className="py-8 text-center text-sm text-slate-500">No shop expenses in this time.</p>
+                <p className="py-8 text-center text-sm text-slate-500">{translateUI("No shop expenses in this time.")}</p>
               ) : (
                 <div className="space-y-4">
                   {report.shopExpenses.map((e) => {
@@ -270,8 +272,7 @@ export default function ReportsPage() {
                           <span className="truncate text-slate-700">
                             {e.title}
                             <span className="ml-2 text-xs text-slate-400">
-                              {e.count}×
-                            </span>
+                              {e.count}{translateUI("×")} </span>
                           </span>
                           <span className="shrink-0 font-semibold text-slate-900">
                             {formatMoney(e.total)}
@@ -290,26 +291,34 @@ export default function ReportsPage() {
 
           {/* Payment methods + sale type */}
           <div className="grid gap-5 lg:grid-cols-2">
-            <Panel title="How customers paid" subtitle="Payments in this time, after returns">
+            <Panel title={translateUI("How customers paid")} subtitle={translateUI("Payments in this time, after returns")}>
               {report.byMethod.length === 0 ? (
-                <p className="py-6 text-center text-sm text-slate-500">No payments in this time.</p>
+                <p className="py-6 text-center text-sm text-slate-500">{translateUI("No payments in this time.")}</p>
               ) : (
                 <div className="space-y-3">
                   {report.byMethod.map((m) => (
-                    <Line key={m.method} label={METHOD_LABEL[m.method] ?? m.method} value={m.total} />
+                    <Line
+                      key={m.method}
+                      label={translateUI(METHOD_LABEL[m.method] ?? m.method)}
+                      value={m.total}
+                    />
                   ))}
                 </div>
               )}
             </Panel>
 
-            <Panel title="Customers and auctions" subtitle="Cars sold in this time">
+            <Panel title={translateUI("Customers and auctions")} subtitle={translateUI("Cars sold in this time")}>
               <div className="space-y-3">
                 {bySaleType.map((t) => (
                   <div key={t.label} className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-4 py-3">
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">{t.label}</p>
+                      <p className="text-sm font-semibold text-slate-900">
+                        {translateUI(t.label)}
+                      </p>
                       <p className="text-xs text-slate-500">
-                        {t.count} car{t.count === 1 ? "" : "s"} · {formatMoney(t.total)}
+                        {t.count}{" "}
+                        {translateUI(t.count === 1 ? "Car" : "Cars")}{" "}
+                        {translateUI("·")} {formatMoney(t.total)}
                       </p>
                     </div>
                     <p className={`text-sm font-bold ${t.profit >= 0 ? "text-emerald-600" : "text-red-600"}`}>
@@ -324,25 +333,24 @@ export default function ReportsPage() {
           {/* Cars sold */}
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="border-b border-slate-200 px-5 py-4">
-              <h2 className="text-base font-semibold text-slate-900">Cars sold</h2>
-              <p className="mt-0.5 text-sm text-slate-500">Profit on each car</p>
+              <h2 className="text-base font-semibold text-slate-900">{translateUI("Cars sold")}</h2>
+              <p className="mt-0.5 text-sm text-slate-500">{translateUI("Profit on each car")}</p>
             </div>
 
             {report.sold.length === 0 ? (
               <p className="px-5 py-12 text-center text-sm text-slate-500">
-                No cars were sold in this time.
-              </p>
+                {translateUI("No cars were sold in this time.")} </p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[900px]">
                   <thead className="border-b border-slate-200 bg-slate-50">
                     <tr className="text-left text-xs font-semibold tracking-wide text-slate-500 uppercase">
-                      <th className="px-5 py-4">Car</th>
-                      <th className="px-5 py-4">Sold on</th>
-                      <th className="px-5 py-4">Total cost</th>
-                      <th className="px-5 py-4">Sold for</th>
-                      <th className="px-5 py-4">Profit</th>
-                      <th className="px-5 py-4">Customer owes</th>
+                      <th className="px-5 py-4">{translateUI("Car")}</th>
+                      <th className="px-5 py-4">{translateUI("Sold on")}</th>
+                      <th className="px-5 py-4">{translateUI("Total cost")}</th>
+                      <th className="px-5 py-4">{translateUI("Sold for")}</th>
+                      <th className="px-5 py-4">{translateUI("Profit")}</th>
+                      <th className="px-5 py-4">{translateUI("Customer owes")}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -358,7 +366,12 @@ export default function ReportsPage() {
                                 {c.vehicle.name} {c.vehicle.model}
                               </p>
                               <p className="text-xs text-slate-500">
-                                {c.saleType === "AUCTION" ? "Auction" : "Customer"} · {c.vehicle.chassisNumber || "—"}
+                                {translateUI(
+                                  c.saleType === "AUCTION"
+                                    ? "Auction"
+                                    : "Customer",
+                                )}{" "}
+                                {translateUI("·")} {c.vehicle.chassisNumber || "—"}
                               </p>
                             </div>
                           </div>
@@ -367,7 +380,7 @@ export default function ReportsPage() {
                         <td className="px-5 py-4">
                           <p className="text-sm font-medium text-slate-900">{formatMoney(c.cost)}</p>
                           <p className="text-xs text-slate-400">
-                            Bought {formatMoney(c.purchasePrice)}
+                            {translateUI("Bought")} {formatMoney(c.purchasePrice)}
                             {c.carExpenses > 0 && ` + repairs ${formatMoney(c.carExpenses)}`}
                           </p>
                         </td>
@@ -378,7 +391,7 @@ export default function ReportsPage() {
                           {formatMoney(c.profit)}
                         </td>
                         <td className={`px-5 py-4 text-sm ${c.remaining > 0 ? "font-semibold text-amber-600" : "text-slate-400"}`}>
-                          {c.remaining > 0 ? formatMoney(c.remaining) : "Paid"}
+                          {c.remaining > 0 ? formatMoney(c.remaining) : translateUI("Paid")}
                         </td>
                       </tr>
                     ))}
@@ -398,6 +411,7 @@ export default function ReportsPage() {
 function Card({
   label, value, note, valueClass = "text-slate-900",
 }: { label: string; value: string; note: string; valueClass?: string }) {
+  useLang();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <p className="text-sm text-slate-500">{label}</p>
@@ -410,11 +424,16 @@ function Card({
 function Panel({
   title, subtitle, children,
 }: { title: string; subtitle: string; children: React.ReactNode }) {
+  useLang();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-4">
-        <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-        <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>
+        <h2 className="text-base font-semibold text-slate-900">
+          {translateUI(title)}
+        </h2>
+        <p className="mt-0.5 text-sm text-slate-500">
+          {translateUI(subtitle)}
+        </p>
       </div>
       {children}
     </div>
@@ -424,10 +443,13 @@ function Panel({
 function Line({
   label, value, strong = false, tone = false,
 }: { label: string; value: number; strong?: boolean; tone?: boolean }) {
+  useLang();
   const color = tone ? (value >= 0 ? "text-emerald-600" : "text-red-600") : "text-slate-900";
   return (
     <div className="flex items-center justify-between gap-4">
-      <span className={`text-sm ${strong ? "font-semibold text-slate-800" : "text-slate-500"}`}>{label}</span>
+      <span className={`text-sm ${strong ? "font-semibold text-slate-800" : "text-slate-500"}`}>
+        {translateUI(label)}
+      </span>
       <span className={`text-sm ${strong ? "font-bold" : "font-semibold"} ${color}`}>
         {formatMoney(value)}
       </span>

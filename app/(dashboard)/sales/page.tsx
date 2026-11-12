@@ -1,5 +1,7 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
+import { getFormatLocale } from "@/lib/format";
 import { useCallback, useEffect, useState } from "react";
 import {
   CarFront,
@@ -69,11 +71,11 @@ type SaleTotals = {
 const todayString = () => new Date().toISOString().split("T")[0];
 
 const formatPrice = (value: number) => {
-  return `¥. ${value.toLocaleString("en-JP")}`;
+  return `¥. ${value.toLocaleString(getFormatLocale())}`;
 };
 
 const formatDate = (value: string) => {
-  return new Date(value).toLocaleDateString("en-JP", {
+  return new Date(value).toLocaleDateString(getFormatLocale(), {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -105,6 +107,7 @@ const statusBadge = (status: Sale["paymentStatus"]) => {
 };
 
 export default function SalesPage() {
+  useLang();
   const confirm = useConfirm();
 
   const [sales, setSales] = useState<Sale[]>([]);
@@ -392,11 +395,10 @@ export default function SalesPage() {
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Sales</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{translateUI("Sales")}</h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Track sold vehicles, payments and outstanding amounts.
-          </p>
+            {translateUI("Track sold vehicles, payments and outstanding amounts.")} </p>
         </div>
 
         <button
@@ -406,8 +408,7 @@ export default function SalesPage() {
           className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-60"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
+          {translateUI("Refresh")} </button>
       </div>
 
       {/* Stats */}
@@ -415,7 +416,7 @@ export default function SalesPage() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-500">Total Sales</p>
+              <p className="text-sm text-slate-500">{translateUI("Total Sales")}</p>
 
               <p className="mt-2 text-2xl font-bold text-slate-900">
                 {formatPrice(totals.totalSales)}
@@ -431,7 +432,7 @@ export default function SalesPage() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-500">Total Received</p>
+              <p className="text-sm text-slate-500">{translateUI("Total Received")}</p>
 
               <p className="mt-2 text-2xl font-bold text-emerald-600">
                 {formatPrice(totals.totalPaid)}
@@ -447,7 +448,7 @@ export default function SalesPage() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-500">Outstanding</p>
+              <p className="text-sm text-slate-500">{translateUI("Outstanding")}</p>
 
               <p className="mt-2 text-2xl font-bold text-amber-600">
                 {formatPrice(totals.totalRemaining)}
@@ -470,7 +471,7 @@ export default function SalesPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search vehicle, model, chassis..."
+              placeholder={translateUI("Search vehicle, model, chassis...")}
               className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white"
             />
           </div>
@@ -482,9 +483,9 @@ export default function SalesPage() {
             }
             className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-blue-500"
           >
-            <option value="ALL">All Sale Types</option>
-            <option value="CUSTOMER">Customer</option>
-            <option value="AUCTION">Auction</option>
+            <option value="ALL">{translateUI("All Sale Types")}</option>
+            <option value="CUSTOMER">{translateUI("Customer")}</option>
+            <option value="AUCTION">{translateUI("Auction")}</option>
           </select>
 
           <select
@@ -494,8 +495,8 @@ export default function SalesPage() {
             }
             className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none focus:border-blue-500"
           >
-            <option value="ACTIVE">Active sales</option>
-            <option value="RETURNED">Returned</option>
+            <option value="ACTIVE">{translateUI("Active sales")}</option>
+            <option value="RETURNED">{translateUI("Returned")}</option>
           </select>
         </div>
       </div>
@@ -506,14 +507,14 @@ export default function SalesPage() {
           <table className="w-full min-w-[1000px]">
             <thead className="border-b border-slate-200 bg-slate-50">
               <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                <th className="px-5 py-4">Vehicle</th>
-                <th className="px-5 py-4">Sale Type</th>
-                <th className="px-5 py-4">Sale Price</th>
-                <th className="px-5 py-4">Paid</th>
-                <th className="px-5 py-4">Remaining</th>
-                <th className="px-5 py-4">Sale Date</th>
-                <th className="px-5 py-4">Status</th>
-                <th className="px-5 py-4 text-right">Action</th>
+                <th className="px-5 py-4">{translateUI("Vehicle")}</th>
+                <th className="px-5 py-4">{translateUI("Sale Type")}</th>
+                <th className="px-5 py-4">{translateUI("Sale Price")}</th>
+                <th className="px-5 py-4">{translateUI("Paid")}</th>
+                <th className="px-5 py-4">{translateUI("Remaining")}</th>
+                <th className="px-5 py-4">{translateUI("Sale Date")}</th>
+                <th className="px-5 py-4">{translateUI("Status")}</th>
+                <th className="px-5 py-4 text-right">{translateUI("Action")}</th>
               </tr>
             </thead>
 
@@ -524,8 +525,7 @@ export default function SalesPage() {
                     colSpan={8}
                     className="px-5 py-12 text-center text-sm text-slate-500"
                   >
-                    Loading sales...
-                  </td>
+                    {translateUI("Loading sales...")} </td>
                 </tr>
               ) : sales.length === 0 ? (
                 <tr>
@@ -533,8 +533,7 @@ export default function SalesPage() {
                     colSpan={8}
                     className="px-5 py-12 text-center text-sm text-slate-500"
                   >
-                    No sales found.
-                  </td>
+                    {translateUI("No sales found.")} </td>
                 </tr>
               ) : (
                 sales.map((sale) => {
@@ -558,7 +557,7 @@ export default function SalesPage() {
                             </p>
 
                             <p className="text-xs text-slate-500">
-                              {vehicle?.year} · {vehicle?.chassisNumber}
+                              {vehicle?.year} {translateUI("·")} {vehicle?.chassisNumber}
                             </p>
                           </div>
                         </div>
@@ -572,9 +571,11 @@ export default function SalesPage() {
                               : "bg-purple-50 text-purple-700"
                           }`}
                         >
-                          {sale.saleType === "CUSTOMER"
-                            ? "Customer"
-                            : "Auction"}
+                          {translateUI(
+                            sale.saleType === "CUSTOMER"
+                              ? "Customer"
+                              : "Auction",
+                          )}
                         </span>
                       </td>
 
@@ -598,7 +599,7 @@ export default function SalesPage() {
                         <span
                           className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${badge.className}`}
                         >
-                          {badge.label}
+                          {translateUI(badge.label)}
                         </span>
                       </td>
 
@@ -607,7 +608,7 @@ export default function SalesPage() {
                           type="button"
                           onClick={() => void openSaleDetails(sale)}
                           className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 hover:bg-blue-50 hover:text-blue-600"
-                          title="View sale"
+                          title={translateUI("View sale")}
                         >
                           <Eye className="h-4 w-4" />
                         </button>
@@ -625,7 +626,7 @@ export default function SalesPage() {
       <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-slate-500">
           {totalCount === 0
-            ? "No sales to display"
+            ? translateUI("No sales to display")
             : `Showing ${(page - 1) * limit + 1}–${Math.min(
                 (page - 1) * limit + sales.length,
                 totalCount
@@ -639,11 +640,10 @@ export default function SalesPage() {
             disabled={page === 1 || loading}
             className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Previous
-          </button>
+            {translateUI("Previous")} </button>
 
           <span className="px-2 text-sm font-medium text-slate-600">
-            Page {page}
+            {translateUI("Page")} {page}
           </span>
 
           <button
@@ -652,8 +652,7 @@ export default function SalesPage() {
             disabled={!hasMore || loading}
             className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            Next
-          </button>
+            {translateUI("Next")} </button>
         </div>
       </div>
 
@@ -665,8 +664,7 @@ export default function SalesPage() {
             <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
               <div>
                 <h2 className="text-xl font-bold text-slate-900">
-                  Sale Details
-                </h2>
+                  {translateUI("Sale Details")} </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
                   {selectedSale.vehicleId?.name} {selectedSale.vehicleId?.model}
@@ -687,12 +685,11 @@ export default function SalesPage() {
             <div className="overflow-y-auto p-6">
               {isReturned && (
                 <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                  Returned on{" "}
+                  {translateUI("Returned on")}{" "}
                   {selectedSale.returnDate
                     ? formatDate(selectedSale.returnDate)
-                    : "—"}
-                  . Refunded {formatPrice(selectedSale.refundAmount ?? 0)}.
-                  {selectedSale.returnReason
+                    : translateUI("—")}
+                  {translateUI(". Refunded")} {formatPrice(selectedSale.refundAmount ?? 0)}{translateUI(".")} {selectedSale.returnReason
                     ? ` Reason: ${selectedSale.returnReason}`
                     : ""}
                 </div>
@@ -701,7 +698,7 @@ export default function SalesPage() {
               {/* Sale Summary */}
               <div className="grid gap-3 sm:grid-cols-2">
                 <DetailRow
-                  label="Sale Type"
+                  label={translateUI("Sale Type")}
                   value={
                     selectedSale.saleType === "CUSTOMER"
                       ? "Customer"
@@ -710,27 +707,27 @@ export default function SalesPage() {
                 />
 
                 <DetailRow
-                  label="Sale Price"
+                  label={translateUI("Sale Price")}
                   value={formatPrice(selectedSale.salePrice)}
                 />
 
                 <DetailRow
-                  label="Total Paid"
+                  label={translateUI("Total Paid")}
                   value={formatPrice(selectedSale.totalPaid)}
                 />
 
                 <DetailRow
-                  label="Remaining"
+                  label={translateUI("Remaining")}
                   value={formatPrice(selectedSale.remaining)}
                 />
 
                 <DetailRow
-                  label="Sale Date"
+                  label={translateUI("Sale Date")}
                   value={formatDate(selectedSale.saleDate)}
                 />
 
                 <DetailRow
-                  label="Chassis Number"
+                  label={translateUI("Chassis Number")}
                   value={selectedSale.vehicleId?.chassisNumber || "—"}
                 />
               </div>
@@ -740,12 +737,11 @@ export default function SalesPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900">
-                      Payment History
-                    </h3>
+                      {translateUI("Payment History")} </h3>
 
                     <p className="mt-0.5 text-xs text-slate-500">
-                      {salePayments.length} payment
-                      {salePayments.length !== 1 ? "s" : ""}
+                      {salePayments.length}{" "}
+                      {translateUI(salePayments.length === 1 ? "payment" : "payments")}
                     </p>
                   </div>
                   <div className="flex items-center justify-center gap-3">
@@ -763,7 +759,7 @@ export default function SalesPage() {
                       >
                         <Plus className="h-4 w-4" />
 
-                        {showPaymentForm ? "Close Payment Form" : "Add Payment"}
+                        {showPaymentForm ? translateUI("Close Payment Form") : translateUI("Add Payment")}
                       </button>
                     )}
                     {!isReturned && selectedSale.totalPaid > 0 && (
@@ -771,8 +767,7 @@ export default function SalesPage() {
                         href={`/payments?returnSale=${selectedSale._id}`}
                         className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-white px-3.5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
                       >
-                        Return payment
-                      </Link>
+                        {translateUI("Return payment")} </Link>
                     )}
                   </div>
                 </div>
@@ -782,12 +777,12 @@ export default function SalesPage() {
                   <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                     <div className="mb-4">
                       <p className="text-sm font-semibold text-slate-900">
-                        {editingPaymentId ? "Edit Payment" : "Add Payment"}
+                        {editingPaymentId ? translateUI("Edit Payment") : translateUI("Add Payment")}
                       </p>
 
                       <p className="mt-1 text-xs text-slate-500">
-                        {editingPaymentId ? "Maximum allowed" : "Remaining amount"}
-                        :{" "}
+                        {editingPaymentId ? translateUI("Maximum allowed") : translateUI("Remaining amount")}
+                        {translateUI(":")}{" "}
                         <span className="font-semibold text-amber-600">
                           {formatPrice(selectedSale.remaining + editingAmount)}
                         </span>
@@ -798,8 +793,7 @@ export default function SalesPage() {
                       {/* Amount */}
                       <div>
                         <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                          Payment Amount
-                        </label>
+                          {translateUI("Payment Amount")} </label>
 
                         <input
                           type="number"
@@ -813,7 +807,7 @@ export default function SalesPage() {
                               amount: e.target.value,
                             }))
                           }
-                          placeholder="0"
+                          placeholder={translateUI("0")}
                           className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                         />
                       </div>
@@ -821,8 +815,7 @@ export default function SalesPage() {
                       {/* Date */}
                       <div>
                         <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                          Payment Date
-                        </label>
+                          {translateUI("Payment Date")} </label>
 
                         <input
                           type="date"
@@ -840,8 +833,7 @@ export default function SalesPage() {
                       {/* Method */}
                       <div>
                         <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                          Payment Method
-                        </label>
+                          {translateUI("Payment Method")} </label>
 
                         <select
                           value={paymentForm.paymentMethod}
@@ -854,20 +846,18 @@ export default function SalesPage() {
                           }
                           className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                         >
-                          <option value="CASH">Cash</option>
-                          <option value="BANK">Bank</option>
-                          <option value="ONLINE">Online</option>
-                          <option value="OTHER">Other</option>
+                          <option value="CASH">{translateUI("Cash")}</option>
+                          <option value="BANK">{translateUI("Bank")}</option>
+                          <option value="ONLINE">{translateUI("Online")}</option>
+                          <option value="OTHER">{translateUI("Other")}</option>
                         </select>
                       </div>
 
                       {/* Notes */}
                       <div>
                         <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                          Notes
-                          <span className="ml-1 font-normal text-slate-400">
-                            (optional)
-                          </span>
+                          {translateUI("Notes")} <span className="ml-1 font-normal text-slate-400">
+                            {translateUI("(optional)")} </span>
                         </label>
 
                         <input
@@ -879,7 +869,7 @@ export default function SalesPage() {
                               notes: e.target.value,
                             }))
                           }
-                          placeholder="Payment details..."
+                          placeholder={translateUI("Payment details...")}
                           className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                         />
                       </div>
@@ -892,8 +882,7 @@ export default function SalesPage() {
                         disabled={addingPayment}
                         className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
                       >
-                        Cancel
-                      </button>
+                        {translateUI("Cancel")} </button>
 
                       <button
                         type="button"
@@ -902,10 +891,10 @@ export default function SalesPage() {
                         className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         {addingPayment
-                          ? "Saving..."
+                          ? translateUI("Saving...")
                           : editingPaymentId
-                            ? "Update Payment"
-                            : "Save Payment"}
+                            ? translateUI("Update Payment")
+                            : translateUI("Save Payment")}
                       </button>
                     </div>
                   </div>
@@ -915,12 +904,10 @@ export default function SalesPage() {
                 <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
                   {paymentsLoading ? (
                     <div className="flex h-28 items-center justify-center text-sm text-slate-500">
-                      Loading payment history...
-                    </div>
+                      {translateUI("Loading payment history...")} </div>
                   ) : salePayments.length === 0 ? (
                     <div className="flex h-28 items-center justify-center text-sm text-slate-500">
-                      No payments recorded for this sale.
-                    </div>
+                      {translateUI("No payments recorded for this sale.")} </div>
                   ) : (
                     <div className="divide-y divide-slate-100">
                       {salePayments.map((payment) => (
@@ -931,12 +918,14 @@ export default function SalesPage() {
                           <div>
                             <div className="flex items-center gap-2">
                             <p className={`text-sm font-semibold ${payment.type === "REFUND" ? "text-red-600" : "text-slate-900"}`}>
-                              {payment.type === "REFUND" ? "−" : ""}{formatPrice(payment.amount)}
+                              {payment.type === "REFUND" ? translateUI("−") : ""}{formatPrice(payment.amount)}
                             </p>
                             <span className="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
                               {payment.type === "REFUND"
                                 ? "Returned to customer"
-                                : formatPaymentMethod(payment.paymentMethod)}
+                                : translateUI(
+                                    formatPaymentMethod(payment.paymentMethod),
+                                  )}
                             </span>
                             </div>
 
@@ -958,7 +947,7 @@ export default function SalesPage() {
                                   type="button"
                                   onClick={() => startEditPayment(payment)}
                                   className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-                                  title="Edit payment"
+                                  title={translateUI("Edit payment")}
                                 >
                                   <Pencil className="h-4 w-4" />
                                 </button>
@@ -968,7 +957,7 @@ export default function SalesPage() {
                                 type="button"
                                 onClick={() => void handleDeletePayment(payment)}
                                 className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"
-                                title="Delete payment"
+                                title={translateUI("Delete payment")}
                               >
                                 <Trash className="h-4 w-4" />
                               </button>
@@ -985,14 +974,14 @@ export default function SalesPage() {
             {/* Footer */}
             <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-4">
               <div>
-                <p className="text-xs text-slate-500">Payment Status</p>
+                <p className="text-xs text-slate-500">{translateUI("Payment Status")}</p>
 
                 <span
                   className={`mt-1 inline-flex rounded-lg px-2.5 py-1 text-xs font-semibold ${
                     statusBadge(selectedSale.paymentStatus).className
                   }`}
                 >
-                  {statusBadge(selectedSale.paymentStatus).label}
+                  {translateUI(statusBadge(selectedSale.paymentStatus).label)}
                 </span>
               </div>
 
@@ -1003,12 +992,11 @@ export default function SalesPage() {
                     onClick={() => setReturnOpen(true)}
                     className="h-10 rounded-xl border border-red-200 bg-white px-4 text-sm font-semibold text-red-600 hover:bg-red-50"
                   >
-                    Return Sale
-                  </button>
+                    {translateUI("Return Sale")} </button>
                 )}
 
                 <div className="text-right">
-                  <p className="text-xs text-slate-500">Remaining</p>
+                  <p className="text-xs text-slate-500">{translateUI("Remaining")}</p>
 
                   <p className="mt-1 text-lg font-bold text-slate-900">
                     {formatPrice(selectedSale.remaining)}
@@ -1039,6 +1027,7 @@ export default function SalesPage() {
 }
 
 function DetailRow({ label, value }: { label: string; value: string }) {
+  useLang();
   return (
     <div className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
       <span className="text-sm text-slate-500">{label}</span>

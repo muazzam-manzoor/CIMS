@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useState } from "react";
 
 import {
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useConfirm } from "@/components/confirm-provider";
+import { getFormatLocale } from "@/lib/format";
 
 type GeneralExpense = {
   _id: string;
@@ -38,7 +40,7 @@ const emptyForm: FormData = {
 };
 
 function formatPrice(value: number) {
-  return new Intl.NumberFormat("en-JP", {
+  return new Intl.NumberFormat(getFormatLocale(), {
     style: "currency",
     currency: "JPY",
     maximumFractionDigits: 0,
@@ -46,7 +48,7 @@ function formatPrice(value: number) {
 }
 
 function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("en-JP", {
+  return new Date(value).toLocaleDateString(getFormatLocale(), {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -54,6 +56,7 @@ function formatDate(value: string) {
 }
 
 export default function GeneralExpensesPage() {
+  useLang();
   const [expenses, setExpenses] = useState<GeneralExpense[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -283,12 +286,10 @@ export default function GeneralExpensesPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            General Expenses
-          </h1>
+            {translateUI("General Expenses")} </h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Track business expenses not directly associated with a vehicle.
-          </p>
+            {translateUI("Track business expenses not directly associated with a vehicle.")} </p>
         </div>
 
         <button
@@ -297,37 +298,33 @@ export default function GeneralExpensesPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
         >
           <Plus className="h-4 w-4" />
-          Add Expense
-        </button>
+          {translateUI("Add Expense")} </button>
       </div>
 
       {/* Summary */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
           <p className="text-sm font-medium text-slate-500">
-            Total Expenses
-          </p>
+            {translateUI("Total Expenses")} </p>
 
           <p className="mt-2 text-2xl font-semibold text-slate-900">
             {formatPrice(totalAmount)}
           </p>
 
           <p className="mt-1 text-xs text-slate-400">
-            Across all general expense records
-          </p>
+            {translateUI("Across all general expense records")} </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
           <p className="text-sm font-medium text-slate-500">
-            Expense Entries
-          </p>
+            {translateUI("Expense Entries")} </p>
 
           <p className="mt-2 text-2xl font-semibold text-slate-900">
             {totalCount}
           </p>
 
           <p className="mt-1 text-xs text-slate-400">
-            {search.trim() ? "Matching records" : "General expense records"}
+            {search.trim() ? translateUI("Matching records") : translateUI("General expense records")}
           </p>
         </div>
       </div>
@@ -345,7 +342,7 @@ export default function GeneralExpensesPage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              placeholder="Search expense or notes..."
+              placeholder={translateUI("Search expense or notes...")}
               className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pr-3 pl-9 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100"
             />
           </div>
@@ -361,8 +358,7 @@ export default function GeneralExpensesPage() {
                 loading ? "animate-spin" : ""
               }`}
             />
-            Refresh
-          </button>
+            {translateUI("Refresh")} </button>
         </div>
       </div>
 
@@ -371,12 +367,11 @@ export default function GeneralExpensesPage() {
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
           <div>
             <h2 className="text-sm font-semibold text-slate-900">
-              General Expense Records
-            </h2>
+              {translateUI("General Expense Records")} </h2>
 
             <p className="mt-0.5 text-xs text-slate-500">
               {totalCount === 0
-                ? "0 records"
+                ? translateUI("0 records")
                 : `Showing ${(page - 1) * limit + 1}-${Math.min(
                     page * limit,
                     totalCount,
@@ -396,13 +391,12 @@ export default function GeneralExpensesPage() {
             </div>
 
             <h3 className="mt-4 text-sm font-semibold text-slate-900">
-              No general expenses found
-            </h3>
+              {translateUI("No general expenses found")} </h3>
 
             <p className="mt-1 max-w-sm text-sm text-slate-500">
               {search
-                ? "Try changing your search."
-                : "Add your first general expense to start tracking business costs."}
+                ? translateUI("Try changing your search.")
+                : translateUI("Add your first general expense to start tracking business costs.")}
             </p>
           </div>
         ) : (
@@ -411,24 +405,19 @@ export default function GeneralExpensesPage() {
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/80">
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Expense
-                  </th>
+                    {translateUI("Expense")} </th>
 
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Amount
-                  </th>
+                    {translateUI("Amount")} </th>
 
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Date
-                  </th>
+                    {translateUI("Date")} </th>
 
                   <th className="px-5 py-3 text-xs font-semibold text-slate-500">
-                    Notes
-                  </th>
+                    {translateUI("Notes")} </th>
 
                   <th className="px-5 py-3 text-right text-xs font-semibold text-slate-500">
-                    Actions
-                  </th>
+                    {translateUI("Actions")} </th>
                 </tr>
               </thead>
 
@@ -466,7 +455,7 @@ export default function GeneralExpensesPage() {
                             openEditModal(expense)
                           }
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-                          title="Edit expense"
+                          title={translateUI("Edit expense")}
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -477,7 +466,7 @@ export default function GeneralExpensesPage() {
                             handleDelete(expense)
                           }
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600"
-                          title="Delete expense"
+                          title={translateUI("Delete expense")}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -491,7 +480,7 @@ export default function GeneralExpensesPage() {
         )}
         <div className="flex flex-col gap-3 border-t border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-slate-500">
-            Page {page} of {totalPages}
+            {translateUI("Page")} {page} {translateUI("of")} {totalPages}
           </p>
 
           <div className="flex items-center gap-2">
@@ -501,8 +490,7 @@ export default function GeneralExpensesPage() {
               disabled={loading || page <= 1}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Previous
-            </button>
+              {translateUI("Previous")} </button>
 
             <button
               type="button"
@@ -510,8 +498,7 @@ export default function GeneralExpensesPage() {
               disabled={loading || !hasMore}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Next
-            </button>
+              {translateUI("Next")} </button>
           </div>
         </div>
       </div>
@@ -524,13 +511,12 @@ export default function GeneralExpensesPage() {
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
                   {editingExpense
-                    ? "Edit General Expense"
-                    : "Add General Expense"}
+                    ? translateUI("Edit General Expense")
+                    : translateUI("Add General Expense")}
                 </h2>
 
                 <p className="mt-0.5 text-xs text-slate-500">
-                  Record a general business operating cost.
-                </p>
+                  {translateUI("Record a general business operating cost.")} </p>
               </div>
 
               <button
@@ -547,8 +533,7 @@ export default function GeneralExpensesPage() {
               {/* Title */}
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Expense Title
-                </label>
+                  {translateUI("Expense Title")} </label>
 
                 <input
                   type="text"
@@ -559,7 +544,7 @@ export default function GeneralExpensesPage() {
                       title: e.target.value,
                     }))
                   }
-                  placeholder="e.g. Office rent, electricity, salary"
+                  placeholder={translateUI("e.g. Office rent, electricity, salary")}
                   className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
@@ -568,8 +553,7 @@ export default function GeneralExpensesPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Amount
-                  </label>
+                    {translateUI("Amount")} </label>
 
                   <input
                     type="number"
@@ -582,15 +566,14 @@ export default function GeneralExpensesPage() {
                         amount: e.target.value,
                       }))
                     }
-                    placeholder="0"
+                    placeholder={translateUI("0")}
                     className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                   />
                 </div>
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Expense Date
-                  </label>
+                    {translateUI("Expense Date")} </label>
 
                   <input
                     type="date"
@@ -609,10 +592,8 @@ export default function GeneralExpensesPage() {
               {/* Notes */}
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Notes
-                  <span className="ml-1 font-normal text-slate-400">
-                    (optional)
-                  </span>
+                  {translateUI("Notes")} <span className="ml-1 font-normal text-slate-400">
+                    {translateUI("(optional)")} </span>
                 </label>
 
                 <textarea
@@ -624,7 +605,7 @@ export default function GeneralExpensesPage() {
                     }))
                   }
                   rows={3}
-                  placeholder="Additional details..."
+                  placeholder={translateUI("Additional details...")}
                   className="w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
               </div>
@@ -637,8 +618,7 @@ export default function GeneralExpensesPage() {
                 disabled={saving}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
               >
-                Cancel
-              </button>
+                {translateUI("Cancel")} </button>
 
               <button
                 type="button"
@@ -647,10 +627,10 @@ export default function GeneralExpensesPage() {
                 className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving
-                  ? "Saving..."
+                  ? translateUI("Saving...")
                   : editingExpense
-                    ? "Update Expense"
-                    : "Save Expense"}
+                    ? translateUI("Update Expense")
+                    : translateUI("Save Expense")}
               </button>
             </div>
           </div>

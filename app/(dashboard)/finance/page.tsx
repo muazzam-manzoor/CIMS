@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -249,6 +250,7 @@ const emptyForm = () => ({
 /* ------------------------------ page ------------------------------ */
 
 export default function MoneyPage() {
+  useLang();
   const confirm = useConfirm();
 
   const [ov, setOv] = useState<Overview | null>(null);
@@ -479,11 +481,9 @@ export default function MoneyPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            Money
-          </h1>
+            {translateUI("Money")} </h1>
           <p className="mt-1 text-sm text-slate-500">
-            See where your money came from, where it went, and who owes whom.
-          </p>
+            {translateUI("See where your money came from, where it went, and who owes whom.")} </p>
         </div>
 
         <div className="flex gap-2">
@@ -494,16 +494,14 @@ export default function MoneyPage() {
             className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-            Refresh
-          </button>
+            {translateUI("Refresh")} </button>
           <button
             type="button"
             onClick={openChooser}
             className="inline-flex h-10 items-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800"
           >
             <Plus className="h-4 w-4" />
-            Add money entry
-          </button>
+            {translateUI("Add money entry")} </button>
         </div>
       </div>
 
@@ -516,8 +514,7 @@ export default function MoneyPage() {
           {/* Big number */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-slate-500">
-              Money you should have right now
-            </p>
+              {translateUI("Money you should have right now")} </p>
             <p
               className={`mt-2 text-4xl font-bold ${
                 ov.cashEstimate >= 0 ? "text-slate-900" : "text-red-600"
@@ -527,25 +524,21 @@ export default function MoneyPage() {
             </p>
             <p className="mt-2 flex items-start gap-1.5 text-xs text-slate-400">
               <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-              This is an estimate worked out from everything recorded in the
-              system (cash, bank and online together). If you bought cars
-              before you started using this system, the number will be lower
-              than reality.
-            </p>
+              {translateUI("This is an estimate worked out from everything recorded in the system (cash, bank and online together). If you bought cars before you started using this system, the number will be lower than reality.")} </p>
           </div>
 
           {/* Who owes whom */}
           <div className="grid gap-4 md:grid-cols-3">
             <OweCard
-              title="Customers still owe you"
+              title={translateUI("Customers still owe you")}
               value={ov.customersOwe}
               tone="amber"
-              hint="Unpaid balance on cars you sold"
+              hint={translateUI("Unpaid balance on cars you sold")}
               href="/sales"
               linkText="Go to Sales"
             />
             <OweCard
-              title="Partners owe you"
+              title={translateUI("Partners owe you")}
               value={ov.partnersOweLoans + ov.stillWithPartners}
               tone="amber"
               hint={`Loans ${formatMoney(ov.partnersOweLoans)} · Business cash they hold ${formatMoney(
@@ -555,10 +548,10 @@ export default function MoneyPage() {
               linkText="See loans"
             />
             <OweCard
-              title="You owe others"
+              title={translateUI("You owe others")}
               value={ov.youOwe}
               tone="red"
-              hint="Borrowed money not yet paid back"
+              hint={translateUI("Borrowed money not yet paid back")}
               href="/finance/loans"
               linkText="See loans"
             />
@@ -566,53 +559,53 @@ export default function MoneyPage() {
 
           {/* In / Out */}
           <div className="grid gap-5 lg:grid-cols-2">
-            <Panel title="Money came in" total={sum(ov.moneyIn)} tone="green">
+            <Panel title={translateUI("Money came in")} total={sum(ov.moneyIn)} tone="green">
               <Row
-                label="Payments from customers"
-                hint="After refunds"
+                label={translateUI("Payments from customers")}
+                hint={translateUI("After refunds")}
                 value={ov.moneyIn.fromCustomers}
                 href="/payments"
               />
-              <Row label="Partners put money in" value={ov.moneyIn.partnersPutIn} />
-              <Row label="Money we borrowed" value={ov.moneyIn.borrowed} />
+              <Row label={translateUI("Partners put money in")} value={ov.moneyIn.partnersPutIn} />
+              <Row label={translateUI("Money we borrowed")} value={ov.moneyIn.borrowed} />
               <Row
-                label="Partners paid back loans"
+                label={translateUI("Partners paid back loans")}
                 value={ov.moneyIn.lentBackByPartners}
               />
             </Panel>
 
-            <Panel title="Money went out" total={sum(ov.moneyOut)} tone="red">
+            <Panel title={translateUI("Money went out")} total={sum(ov.moneyOut)} tone="red">
               <Row
-                label="Cars bought"
+                label={translateUI("Cars bought")}
                 value={ov.moneyOut.carsBought}
                 href="/inventory"
               />
               <Row
-                label="Car expenses (repairs, etc.)"
+                label={translateUI("Car expenses (repairs, etc.)")}
                 value={ov.moneyOut.carExpenses}
                 href="/expenses/vehicle"
               />
               <Row
-                label="Shop / office expenses"
+                label={translateUI("Shop / office expenses")}
                 value={ov.moneyOut.generalExpenses}
                 href="/expenses/general"
               />
               <Row
-                label="Partners' money given back"
+                label={translateUI("Partners' money given back")}
                 value={ov.moneyOut.partnersMoneyReturned}
               />
               <Row
-                label="Partners took for personal use"
+                label={translateUI("Partners took for personal use")}
                 value={ov.moneyOut.partnersPersonalUse}
               />
-              <Row label="Loans we paid back" value={ov.moneyOut.loansPaidBack} />
+              <Row label={translateUI("Loans we paid back")} value={ov.moneyOut.loansPaidBack} />
               <Row
-                label="Money lent to partners"
+                label={translateUI("Money lent to partners")}
                 value={ov.moneyOut.lentToPartners}
               />
               <Row
-                label="Business cash held by partners"
-                hint="Given for business work, not yet reported"
+                label={translateUI("Business cash held by partners")}
+                hint={translateUI("Given for business work, not yet reported")}
                 value={ov.moneyOut.stillWithPartners}
               />
             </Panel>
@@ -620,17 +613,12 @@ export default function MoneyPage() {
 
           {/* Plain explanation */}
           <div className="rounded-2xl border border-sky-100 bg-sky-50 p-4 text-sm text-sky-900">
-            <p className="font-semibold">Is this the same as profit?</p>
+            <p className="font-semibold">{translateUI("Is this the same as profit?")}</p>
             <p className="mt-1 text-sky-800">
-              No. Money from partners or loans is not income, and paying loans
-              back is not an expense. Your real profit only comes from selling
-              cars for more than they cost you, minus your expenses. You can
-              see that in{" "}
+              {translateUI("No. Money from partners or loans is not income, and paying loans back is not an expense. Your real profit only comes from selling cars for more than they cost you, minus your expenses. You can see that in")}{" "}
               <Link href="/reports" className="font-semibold underline">
-                Reports
-              </Link>
-              .
-            </p>
+                {translateUI("Reports")} </Link>
+              {translateUI(".")} </p>
           </div>
         </>
       )}
@@ -639,18 +627,14 @@ export default function MoneyPage() {
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-100 px-5 py-4">
           <h2 className="text-sm font-semibold text-slate-900">
-            Recent money entries
-          </h2>
+            {translateUI("Recent money entries")} </h2>
           <p className="mt-0.5 text-xs text-slate-500">
-            Partner and loan entries you added. Sales, payments and expenses
-            appear in their own pages.
-          </p>
+            {translateUI("Partner and loan entries you added. Sales, payments and expenses appear in their own pages.")} </p>
         </div>
 
         {diary.length === 0 ? (
           <p className="px-5 py-10 text-center text-sm text-slate-500">
-            Nothing yet. Press “Add money entry” to start.
-          </p>
+            {translateUI("Nothing yet. Press “Add money entry” to start.")} </p>
         ) : (
           <div className="divide-y divide-slate-100">
             {diary.map((tx) => {
@@ -681,12 +665,14 @@ export default function MoneyPage() {
 
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-slate-900">
-                        {describe(tx)}
+                        {translateUI(describe(tx))}
                       </p>
                       <p className="truncate text-xs text-slate-500">
-                        {formatDate(tx.transactionDate)} ·{" "}
-                        {METHODS.find((m) => m[0] === tx.paymentMethod)?.[1] ??
-                          tx.paymentMethod}
+                        {formatDate(tx.transactionDate)} {translateUI("·")}{" "}
+                        {translateUI(
+                          METHODS.find((m) => m[0] === tx.paymentMethod)?.[1] ??
+                            tx.paymentMethod,
+                        )}
                         {tx.notes ? ` · ${tx.notes}` : ""}
                       </p>
                     </div>
@@ -702,13 +688,13 @@ export default function MoneyPage() {
                             : "text-slate-500"
                       }`}
                     >
-                      {flow === "in" ? "+" : flow === "out" ? "−" : ""}
+                      {flow === "in" ? translateUI("+") : flow === "out" ? translateUI("−") : ""}
                       {formatMoney(tx.amount)}
                     </p>
                     <button
                       type="button"
                       onClick={() => void remove(tx)}
-                      title="Delete"
+                      title={translateUI("Delete")}
                       className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -721,7 +707,7 @@ export default function MoneyPage() {
         )}
 
         <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4">
-          <p className="text-sm text-slate-500">Page {page}</p>
+          <p className="text-sm text-slate-500">{translateUI("Page")} {page}</p>
           <div className="flex gap-2">
             <button
               type="button"
@@ -729,16 +715,14 @@ export default function MoneyPage() {
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm disabled:opacity-40"
             >
-              Previous
-            </button>
+              {translateUI("Previous")} </button>
             <button
               type="button"
               disabled={!hasMore}
               onClick={() => setPage((p) => p + 1)}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm disabled:opacity-40"
             >
-              Next
-            </button>
+              {translateUI("Next")} </button>
           </div>
         </div>
       </div>
@@ -750,10 +734,10 @@ export default function MoneyPage() {
             <div className="sticky top-0 flex items-center justify-between border-b border-slate-100 bg-white px-5 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  {action ? action.title : "What happened?"}
+                  {translateUI(action ? action.title : "What happened?")}
                 </h2>
                 <p className="mt-0.5 text-xs text-slate-500">
-                  {action ? action.hint : "Pick the one that matches."}
+                  {translateUI(action ? action.hint : "Pick the one that matches.")}
                 </p>
               </div>
               <button
@@ -771,7 +755,7 @@ export default function MoneyPage() {
                 {GROUPS.map((group) => (
                   <div key={group}>
                     <p className="mb-2 text-xs font-semibold tracking-wide text-slate-400 uppercase">
-                      {group}
+                      {translateUI(group)}
                     </p>
                     <div className="space-y-2">
                       {ACTIONS.filter((a) => a.group === group).map((a) => (
@@ -785,7 +769,7 @@ export default function MoneyPage() {
                           className="w-full rounded-xl border border-slate-200 px-4 py-3 text-left transition hover:border-sky-300 hover:bg-sky-50"
                         >
                           <p className="text-sm font-semibold text-slate-900">
-                            {a.title}
+                            {translateUI(a.title)}
                           </p>
                           <p className="mt-0.5 text-xs text-slate-500">
                             {a.hint}
@@ -806,8 +790,8 @@ export default function MoneyPage() {
                     <Field
                       label={
                         action.need === "lender"
-                          ? "Who lent you the money?"
-                          : "Which partner?"
+                          ? translateUI("Who lent you the money?")
+                          : translateUI("Which partner?")
                       }
                     >
                       <select
@@ -817,8 +801,8 @@ export default function MoneyPage() {
                       >
                         <option value="">
                           {action.need === "lender"
-                            ? "Someone else (bank, friend, other)"
-                            : "Select partner"}
+                            ? translateUI("Someone else (bank, friend, other)")
+                            : translateUI("Select partner")}
                         </option>
                         {partners.map((p) => (
                           <option key={p._id} value={p._id}>
@@ -828,73 +812,69 @@ export default function MoneyPage() {
                       </select>
                       {partners.length === 0 && action.need === "partner" && (
                         <p className="mt-1 text-xs text-amber-700">
-                          No partners yet. Add one on the{" "}
+                          {translateUI("No partners yet. Add one on the")}{" "}
                           <Link href="/finance/partners" className="underline">
-                            Partners page
-                          </Link>
-                          .
-                        </p>
+                            {translateUI("Partners page")} </Link>
+                          {translateUI(".")} </p>
                       )}
                     </Field>
                   )}
 
                   {action.need === "lender" && !form.partnerId && (
-                    <Field label="Name of lender">
+                    <Field label={translateUI("Name of lender")}>
                       <input
                         value={form.lenderName}
                         onChange={(e) => set({ lenderName: e.target.value })}
                         maxLength={150}
-                        placeholder="e.g. HBL Bank, Bilal Ahmed"
+                        placeholder={translateUI("e.g. HBL Bank, Bilal Ahmed")}
                         className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400"
                       />
                     </Field>
                   )}
 
                   {action.need === "loan" && (
-                    <Field label="Which loan?">
+                    <Field label={translateUI("Which loan?")}>
                       <select
                         value={form.loanId}
                         onChange={(e) => set({ loanId: e.target.value })}
                         className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400"
                       >
-                        <option value="">Select</option>
+                        <option value="">{translateUI("Select")}</option>
                         {loanChoices.map((l) => (
                           <option key={l._id} value={l._id}>
-                            {l.name} — still {formatMoney(l.outstanding)}
+                            {l.name} {translateUI("— still")} {formatMoney(l.outstanding)}
                           </option>
                         ))}
                       </select>
                       {loanChoices.length === 0 && (
                         <p className="mt-1 text-xs text-amber-700">
-                          Nothing is pending here.
-                        </p>
+                          {translateUI("Nothing is pending here.")} </p>
                       )}
                     </Field>
                   )}
 
                   {action.need === "advance" && (
                     <>
-                      <Field label="Which money given to a partner?">
+                      <Field label={translateUI("Which money given to a partner?")}>
                         <select
                           value={form.advanceId}
                           onChange={(e) => set({ advanceId: e.target.value })}
                           className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400"
                         >
-                          <option value="">Select</option>
+                          <option value="">{translateUI("Select")}</option>
                           {ov?.openAdvances.map((a) => (
                             <option key={a._id} value={a._id}>
-                              {a.partnerName} — still {formatMoney(a.remaining)}
+                              {a.partnerName} {translateUI("— still")} {formatMoney(a.remaining)}
                             </option>
                           ))}
                         </select>
                         {ov?.openAdvances.length === 0 && (
                           <p className="mt-1 text-xs text-amber-700">
-                            No partner is holding business money right now.
-                          </p>
+                            {translateUI("No partner is holding business money right now.")} </p>
                         )}
                       </Field>
 
-                      <Field label="What happened to it?">
+                      <Field label={translateUI("What happened to it?")}>
                         <select
                           value={form.settleKind}
                           onChange={(e) =>
@@ -907,32 +887,27 @@ export default function MoneyPage() {
                           className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400"
                         >
                           <option value="EXPENSE">
-                            Partner spent it on business
-                          </option>
+                            {translateUI("Partner spent it on business")} </option>
                           <option value="CASH_RETURN">
-                            Partner returned the leftover cash
-                          </option>
+                            {translateUI("Partner returned the leftover cash")} </option>
                         </select>
                         {form.settleKind === "EXPENSE" && (
                           <p className="mt-1 text-xs text-slate-500">
-                            Also add the actual cost in Expenses (car or
-                            general) so your profit is correct. The Money page
-                            will not count it twice.
-                          </p>
+                            {translateUI("Also add the actual cost in Expenses (car or general) so your profit is correct. The Money page will not count it twice.")} </p>
                         )}
                       </Field>
                     </>
                   )}
 
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <Field label="Amount">
+                    <Field label={translateUI("Amount")}>
                       <input
                         type="number"
                         min="0.01"
                         step="0.01"
                         value={form.amount}
                         onChange={(e) => set({ amount: e.target.value })}
-                        placeholder="0"
+                        placeholder={translateUI("0")}
                         className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400"
                       />
                       {maxAmount !== undefined && (
@@ -941,12 +916,11 @@ export default function MoneyPage() {
                           onClick={() => set({ amount: String(maxAmount) })}
                           className="mt-1 text-xs font-medium text-sky-700 hover:underline"
                         >
-                          Use full amount ({formatMoney(maxAmount)})
-                        </button>
+                          {translateUI("Use full amount (")}{formatMoney(maxAmount)}{translateUI(")")} </button>
                       )}
                     </Field>
 
-                    <Field label="Date">
+                    <Field label={translateUI("Date")}>
                       <input
                         type="date"
                         value={form.date}
@@ -956,7 +930,7 @@ export default function MoneyPage() {
                     </Field>
                   </div>
 
-                  <Field label="How was it paid?">
+                  <Field label={translateUI("How was it paid?")}>
                     <select
                       value={form.method}
                       onChange={(e) => set({ method: e.target.value })}
@@ -964,19 +938,19 @@ export default function MoneyPage() {
                     >
                       {METHODS.map(([value, label]) => (
                         <option key={value} value={value}>
-                          {label}
+                          {translateUI(label)}
                         </option>
                       ))}
                     </select>
                   </Field>
 
-                  <Field label="Note (optional)">
+                  <Field label={translateUI("Note (optional)")}>
                     <textarea
                       rows={2}
                       value={form.notes}
                       maxLength={2000}
                       onChange={(e) => set({ notes: e.target.value })}
-                      placeholder="Anything you want to remember..."
+                      placeholder={translateUI("Anything you want to remember...")}
                       className="w-full resize-none rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400"
                     />
                   </Field>
@@ -989,15 +963,14 @@ export default function MoneyPage() {
                     disabled={saving}
                     className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 disabled:opacity-50"
                   >
-                    Back
-                  </button>
+                    {translateUI("Back")} </button>
                   <button
                     type="button"
                     onClick={() => void save()}
                     disabled={saving}
                     className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white disabled:opacity-50"
                   >
-                    {saving ? "Saving..." : "Save"}
+                    {saving ? translateUI("Saving...") : translateUI("Save")}
                   </button>
                 </div>
               </>
@@ -1022,6 +995,7 @@ function Field({
   label: string;
   children: React.ReactNode;
 }) {
+  useLang();
   return (
     <div>
       <label className="mb-1.5 block text-sm font-medium text-slate-700">
@@ -1047,9 +1021,10 @@ function OweCard({
   href: string;
   linkText: string;
 }) {
+  useLang();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <p className="text-sm text-slate-500">{title}</p>
+      <p className="text-sm text-slate-500">{translateUI(title)}</p>
       <p
         className={`mt-2 text-2xl font-bold ${
           tone === "red" ? "text-red-600" : "text-amber-600"
@@ -1057,13 +1032,12 @@ function OweCard({
       >
         {formatMoney(value)}
       </p>
-      <p className="mt-1 text-xs text-slate-400">{hint}</p>
+      <p className="mt-1 text-xs text-slate-400">{translateUI(hint)}</p>
       <Link
         href={href}
         className="mt-3 inline-block text-xs font-semibold text-sky-700 hover:underline"
       >
-        {linkText} →
-      </Link>
+        {translateUI(linkText)} {translateUI("→")} </Link>
     </div>
   );
 }
@@ -1079,6 +1053,7 @@ function Panel({
   tone: "green" | "red";
   children: React.ReactNode;
 }) {
+  useLang();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
@@ -1107,6 +1082,7 @@ function Row({
   hint?: string;
   href?: string;
 }) {
+  useLang();
   if (!value) return null; // hide empty lines so it stays simple
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AlertCircle, ImagePlus, Upload, X } from "lucide-react";
 import { toast } from "sonner";
@@ -120,6 +121,7 @@ function Field({
   className?: string;
   children: React.ReactNode;
 }) {
+  useLang();
   return (
     <div className={className}>
       <label
@@ -127,7 +129,7 @@ function Field({
         className="mb-1.5 block text-xs font-semibold text-[#334155]"
       >
         {label}
-        {required && <span className="text-[#DC2626]"> *</span>}
+        {required && <span className="text-[#DC2626]"> {translateUI("*")}</span>}
       </label>
 
       {children}
@@ -147,6 +149,7 @@ export function AddVehicleModal({
   onClose,
   onSuccess,
 }: AddVehicleModalProps) {
+  useLang();
   const [activeTab, setActiveTab] = useState<"basic" | "additional">("basic");
 
   const [form, setForm] = useState<VehicleForm>(emptyForm);
@@ -430,19 +433,17 @@ export function AddVehicleModal({
               id="add-vehicle-title"
               className="text-lg font-semibold text-[#0F172A]"
             >
-              Add Vehicle
-            </h2>
+              {translateUI("Add Vehicle")} </h2>
 
             <p className="mt-0.5 text-xs text-[#64748B]">
-              Add a new vehicle to your inventory
-            </p>
+              {translateUI("Add a new vehicle to your inventory")} </p>
           </div>
 
           <button
             type="button"
             onClick={onClose}
             disabled={saving}
-            aria-label="Close"
+            aria-label={translateUI("Close")}
             className="flex h-8 w-8 items-center justify-center rounded-lg text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#334155] disabled:opacity-50"
           >
             <X className="h-5 w-5" />
@@ -460,8 +461,7 @@ export function AddVehicleModal({
                 : "border-transparent text-[#64748B] hover:text-[#334155]"
             }`}
           >
-            Basic Information
-            {basicHasError && (
+            {translateUI("Basic Information")} {basicHasError && (
               <span className="h-2 w-2 rounded-full bg-[#DC2626]" />
             )}
           </button>
@@ -475,8 +475,7 @@ export function AddVehicleModal({
                 : "border-transparent text-[#64748B] hover:text-[#334155]"
             }`}
           >
-            Additional Information
-            {additionalHasError && (
+            {translateUI("Additional Information")} {additionalHasError && (
               <span className="h-2 w-2 rounded-full bg-[#DC2626]" />
             )}
           </button>
@@ -499,18 +498,16 @@ export function AddVehicleModal({
             <div className="space-y-5">
               <div>
                 <h3 className="text-sm font-semibold text-[#0F172A]">
-                  Vehicle Details
-                </h3>
+                  {translateUI("Vehicle Details")} </h3>
 
                 <p className="mt-1 text-xs text-[#64748B]">
-                  These fields are required to add a vehicle.
-                </p>
+                  {translateUI("These fields are required to add a vehicle.")} </p>
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Field
                   id="vehicle-name"
-                  label="Vehicle Name"
+                  label={translateUI("Vehicle Name")}
                   required
                   error={errors.name}
                 >
@@ -520,7 +517,7 @@ export function AddVehicleModal({
                     autoFocus
                     value={form.name}
                     onChange={(e) => updateField("name", e.target.value)}
-                    placeholder="e.g. Toyota Corolla"
+                    placeholder={translateUI("e.g. Toyota Corolla")}
                     aria-invalid={Boolean(errors.name)}
                     className={inputClass(Boolean(errors.name))}
                   />
@@ -528,7 +525,7 @@ export function AddVehicleModal({
 
                 <Field
                   id="vehicle-model"
-                  label="Model"
+                  label={translateUI("Model")}
                   error={errors.model}
                 >
                   <input
@@ -536,14 +533,14 @@ export function AddVehicleModal({
                     type="text"
                     value={form.model}
                     onChange={(e) => updateField("model", e.target.value)}
-                    placeholder="e.g. GLI"
+                    placeholder={translateUI("e.g. GLI")}
                     aria-invalid={Boolean(errors.model)}
                     className={inputClass(Boolean(errors.model))}
                   />
                 </Field>
                 <Field
                   id="vehicle-price"
-                  label="Purchase Price"
+                  label={translateUI("Purchase Price")}
                   required
                   error={errors.purchasePrice}
                 >
@@ -555,7 +552,7 @@ export function AddVehicleModal({
                     onChange={(e) =>
                       updateField("purchasePrice", e.target.value)
                     }
-                    placeholder="e.g. 4500000"
+                    placeholder={translateUI("e.g. 4500000")}
                     aria-invalid={Boolean(errors.purchasePrice)}
                     className={inputClass(Boolean(errors.purchasePrice))}
                   />
@@ -563,7 +560,7 @@ export function AddVehicleModal({
 
                 <Field
                   id="vehicle-purchase-date"
-                  label="Purchase Date"
+                  label={translateUI("Purchase Date")}
                   required
                   error={errors.purchaseDate}
                 >
@@ -581,7 +578,7 @@ export function AddVehicleModal({
                 </Field>
                 <Field
                   id="vehicle-color"
-                  label="Color"
+                  label={translateUI("Color")}
                   error={errors.color}
                 >
                   <input
@@ -589,7 +586,7 @@ export function AddVehicleModal({
                     type="text"
                     value={form.color}
                     onChange={(e) => updateField("color", e.target.value)}
-                    placeholder="e.g. Black"
+                    placeholder={translateUI("e.g. Black")}
                     aria-invalid={Boolean(errors.color)}
                     className={inputClass(Boolean(errors.color))}
                   />
@@ -597,7 +594,7 @@ export function AddVehicleModal({
 
                 <Field
                   id="vehicle-chassis"
-                  label="Chassis Number"
+                  label={translateUI("Chassis Number")}
                   error={errors.chassisNumber}
                 >
                   <input
@@ -607,7 +604,7 @@ export function AddVehicleModal({
                     onChange={(e) =>
                       updateField("chassisNumber", e.target.value)
                     }
-                    placeholder="Enter chassis number"
+                    placeholder={translateUI("Enter chassis number")}
                     aria-invalid={Boolean(errors.chassisNumber)}
                     className={inputClass(Boolean(errors.chassisNumber))}
                   />
@@ -621,17 +618,14 @@ export function AddVehicleModal({
             <div className="space-y-5">
               <div>
                 <h3 className="text-sm font-semibold text-[#0F172A]">
-                  Additional Information
-                </h3>
+                  {translateUI("Additional Information")} </h3>
 
                 <p className="mt-1 text-xs text-[#64748B]">
-                  These fields are optional. You can add them now or leave them
-                  empty.
-                </p>
+                  {translateUI("These fields are optional. You can add them now or leave them empty.")} </p>
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <Field id="vehicle-engine" label="Engine Number">
+                <Field id="vehicle-engine" label={translateUI("Engine Number")}>
                   <input
                     id="vehicle-engine"
                     type="text"
@@ -639,12 +633,12 @@ export function AddVehicleModal({
                     onChange={(e) =>
                       updateField("engineNumber", e.target.value)
                     }
-                    placeholder="Enter engine number"
+                    placeholder={translateUI("Enter engine number")}
                     className={inputClass(false)}
                   />
                 </Field>
 
-                <Field id="vehicle-registration" label="Registration Number">
+                <Field id="vehicle-registration" label={translateUI("Registration Number")}>
                   <input
                     id="vehicle-registration"
                     type="text"
@@ -652,14 +646,14 @@ export function AddVehicleModal({
                     onChange={(e) =>
                       updateField("registrationNumber", e.target.value)
                     }
-                    placeholder="e.g. ABC-123"
+                    placeholder={translateUI("e.g. ABC-123")}
                     className={inputClass(false)}
                   />
                 </Field>
 
                 <Field
                   id="vehicle-mileage"
-                  label="Mileage"
+                  label={translateUI("Mileage")}
                   error={errors.mileage}
                 >
                   <input
@@ -668,26 +662,26 @@ export function AddVehicleModal({
                     min="0"
                     value={form.mileage}
                     onChange={(e) => updateField("mileage", e.target.value)}
-                    placeholder="e.g. 45000"
+                    placeholder={translateUI("e.g. 45000")}
                     aria-invalid={Boolean(errors.mileage)}
                     className={inputClass(Boolean(errors.mileage))}
                   />
                 </Field>
 
-                <Field id="vehicle-location" label="Location">
+                <Field id="vehicle-location" label={translateUI("Location")}>
                   <input
                     id="vehicle-location"
                     type="text"
                     value={form.location}
                     onChange={(e) => updateField("location", e.target.value)}
-                    placeholder="e.g. Lahore Showroom"
+                    placeholder={translateUI("e.g. Lahore Showroom")}
                     className={inputClass(false)}
                   />
                 </Field>
 
                 <Field
                   id="vehicle-condition"
-                  label="Condition"
+                  label={translateUI("Condition")}
                   className="md:col-span-2"
                 >
                   <input
@@ -695,7 +689,7 @@ export function AddVehicleModal({
                     type="text"
                     value={form.condition}
                     onChange={(e) => updateField("condition", e.target.value)}
-                    placeholder="e.g. Excellent, Good, Needs Repair"
+                    placeholder={translateUI("e.g. Excellent, Good, Needs Repair")}
                     className={inputClass(false)}
                   />
                 </Field>
@@ -704,13 +698,11 @@ export function AddVehicleModal({
                 <div className="md:col-span-2">
                   <div className="mb-2">
                     <label className="block text-xs font-semibold text-[#334155]">
-                      Vehicle Images
-                    </label>
+                      {translateUI("Vehicle Images")} </label>
 
                     <p className="mt-1 text-xs text-[#64748B]">
-                      Add clear photos of the vehicle. Up to {MAX_IMAGES}{" "}
-                      images, 5 MB each.
-                    </p>
+                      {translateUI("Add clear photos of the vehicle. Up to")} {MAX_IMAGES}{" "}
+                      {translateUI("images, 5 MB each.")} </p>
                   </div>
 
                   <div className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-4">
@@ -726,12 +718,10 @@ export function AddVehicleModal({
                           </div>
 
                           <span className="text-sm font-semibold text-[#334155]">
-                            Add Images
-                          </span>
+                            {translateUI("Add Images")} </span>
 
                           <span className="mt-1 text-xs text-[#64748B]">
-                            PNG, JPG or WEBP
-                          </span>
+                            {translateUI("PNG, JPG or WEBP")} </span>
 
                           <input
                             id="vehicle-images"
@@ -760,7 +750,7 @@ export function AddVehicleModal({
                           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition group-hover:opacity-100" />
 
                           <div className="absolute bottom-2 left-2 rounded-md bg-black/60 px-2 py-1 text-[11px] font-medium text-white opacity-0 backdrop-blur-sm transition group-hover:opacity-100">
-                            Image {index + 1}
+                            {translateUI("Image")} {index + 1}
                           </div>
 
                           <button
@@ -781,18 +771,15 @@ export function AddVehicleModal({
 
                       {imagePreviews.length === 0 ? (
                         <span>
-                          Click{" "}
+                          {translateUI("Click")}{" "}
                           <span className="font-medium text-[#334155]">
-                            Add Images
-                          </span>{" "}
-                          to upload vehicle photos.
-                        </span>
+                            {translateUI("Add Images")} </span>{" "}
+                          {translateUI("to upload vehicle photos.")} </span>
                       ) : (
                         <span>
                           {imagePreviews.length}{" "}
-                          {imagePreviews.length === 1 ? "image" : "images"}{" "}
-                          selected.
-                        </span>
+                          {imagePreviews.length === 1 ? translateUI("image") : translateUI("images")}{" "}
+                          {translateUI("selected.")} </span>
                       )}
                     </div>
                   </div>
@@ -801,14 +788,14 @@ export function AddVehicleModal({
                 {/* Notes */}
                 <Field
                   id="vehicle-notes"
-                  label="Notes"
+                  label={translateUI("Notes")}
                   className="md:col-span-2"
                 >
                   <textarea
                     id="vehicle-notes"
                     value={form.notes}
                     onChange={(e) => updateField("notes", e.target.value)}
-                    placeholder="Add any additional notes..."
+                    placeholder={translateUI("Add any additional notes...")}
                     rows={4}
                     className="w-full resize-none rounded-lg border border-[#CBD5E1] bg-white px-3 py-2.5 text-sm text-[#334155] outline-none transition placeholder:text-[#94A3B8] focus:border-[#1D4ED8] focus:ring-2 focus:ring-[#1D4ED8]/10"
                   />
@@ -821,8 +808,7 @@ export function AddVehicleModal({
         {/* Footer */}
         <div className="flex items-center justify-between border-t border-[#E2E8F0] px-6 py-4">
           <p className="text-xs text-[#64748B]">
-            <span className="text-[#DC2626]">*</span> Required fields
-          </p>
+            <span className="text-[#DC2626]">{translateUI("*")}</span> {translateUI("Required fields")} </p>
 
           <div className="flex items-center gap-3">
             <button
@@ -831,15 +817,14 @@ export function AddVehicleModal({
               disabled={saving}
               className="h-10 rounded-lg border border-[#CBD5E1] bg-white px-4 text-sm font-semibold text-[#334155] hover:bg-[#F8FAFC] disabled:opacity-50"
             >
-              Cancel
-            </button>
+              {translateUI("Cancel")} </button>
 
             <button
               type="submit"
               disabled={saving}
               className="h-10 rounded-lg bg-[#1D4ED8] px-5 text-sm font-semibold text-white transition hover:bg-[#1E40AF] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {saving ? saveStep : "Save Vehicle"}
+              {saving ? saveStep : translateUI("Save Vehicle")}
             </button>
           </div>
         </div>

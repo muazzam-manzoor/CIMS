@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -57,6 +58,7 @@ type Props = {
 };
 
 export default function EditVehiclePage({ params }: Props) {
+  useLang();
     const [id, setId] = useState("");
     const router = useRouter();
 
@@ -335,8 +337,7 @@ export default function EditVehiclePage({ params }: Props) {
         return (
             <div className="rounded-2xl border border-red-100 bg-red-50 p-8 text-center">
                 <h2 className="text-lg font-semibold text-red-900">
-                    Unable to load vehicle
-                </h2>
+                    {translateUI("Unable to load vehicle")} </h2>
 
                 <p className="mt-2 text-sm text-red-700">
                     {error}
@@ -347,8 +348,7 @@ export default function EditVehiclePage({ params }: Props) {
                     className="mt-5 inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Back to inventory
-                </Link>
+                    {translateUI("Back to inventory")} </Link>
             </div>
         );
     }
@@ -361,17 +361,14 @@ export default function EditVehiclePage({ params }: Props) {
                     className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800"
                 >
                     <ArrowLeft className="h-4 w-4" />
-                    Back to vehicle
-                </Link>
+                    {translateUI("Back to vehicle")} </Link>
 
                 <div className="mt-3">
                     <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-                        Edit Vehicle
-                    </h1>
+                        {translateUI("Edit Vehicle")} </h1>
 
                     <p className="mt-1 text-sm text-slate-500">
-                        Update the vehicle information and images.
-                    </p>
+                        {translateUI("Update the vehicle information and images.")} </p>
                 </div>
             </div>
 
@@ -391,45 +388,43 @@ export default function EditVehiclePage({ params }: Props) {
             <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="mb-5">
                     <h2 className="text-sm font-semibold text-slate-900">
-                        Basic Information
-                    </h2>
+                        {translateUI("Basic Information")} </h2>
 
                     <p className="mt-1 text-xs text-slate-500">
-                        Required and primary vehicle information.
-                    </p>
+                        {translateUI("Required and primary vehicle information.")} </p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <Input
-                        label="Vehicle Name"
+                        label={translateUI("Vehicle Name")}
                         required
                         value={form.name}
                         onChange={(value) =>
                             updateField("name", value)
                         }
-                        placeholder="e.g. Toyota Corolla"
+                        placeholder={translateUI("e.g. Toyota Corolla")}
                     />
 
                     <Input
-                        label="Model"
+                        label={translateUI("Model")}
                         value={form.model}
                         onChange={(value) =>
                             updateField("model", value)
                         }
-                        placeholder="e.g. GLI"
+                        placeholder={translateUI("e.g. GLI")}
                     />
 
                     <Input
-                        label="Color"
+                        label={translateUI("Color")}
                         value={form.color}
                         onChange={(value) =>
                             updateField("color", value)
                         }
-                        placeholder="e.g. Black"
+                        placeholder={translateUI("e.g. Black")}
                     />
 
                     <Input
-                        label="Purchase Date"
+                        label={translateUI("Purchase Date")}
                         required
                         type="date"
                         value={form.purchaseDate}
@@ -443,7 +438,7 @@ export default function EditVehiclePage({ params }: Props) {
 
                     <div className="md:col-span-2">
                         <Input
-                            label="Purchase Price"
+                            label={translateUI("Purchase Price")}
                             required
                             type="number"
                             value={form.purchasePrice}
@@ -453,7 +448,7 @@ export default function EditVehiclePage({ params }: Props) {
                                     value
                                 )
                             }
-                            placeholder="e.g. 4500000"
+                            placeholder={translateUI("e.g. 4500000")}
                         />
                     </div>
                 </div>
@@ -463,13 +458,12 @@ export default function EditVehiclePage({ params }: Props) {
             <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="mb-5">
                     <h2 className="text-sm font-semibold text-slate-900">
-                        Additional Information
-                    </h2>
+                        {translateUI("Additional Information")} </h2>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <Input
-                        label="Chassis Number"
+                        label={translateUI("Chassis Number")}
                         value={form.chassisNumber}
                         onChange={(value) =>
                             updateField(
@@ -477,11 +471,11 @@ export default function EditVehiclePage({ params }: Props) {
                                 value
                             )
                         }
-                        placeholder="Enter chassis number"
+                        placeholder={translateUI("Enter chassis number")}
                     />
 
                     <Input
-                        label="Engine Number"
+                        label={translateUI("Engine Number")}
                         value={form.engineNumber}
                         onChange={(value) =>
                             updateField(
@@ -489,11 +483,11 @@ export default function EditVehiclePage({ params }: Props) {
                                 value
                             )
                         }
-                        placeholder="Enter engine number"
+                        placeholder={translateUI("Enter engine number")}
                     />
 
                     <Input
-                        label="Registration Number"
+                        label={translateUI("Registration Number")}
                         value={form.registrationNumber}
                         onChange={(value) =>
                             updateField(
@@ -501,30 +495,30 @@ export default function EditVehiclePage({ params }: Props) {
                                 value
                             )
                         }
-                        placeholder="e.g. ABC-123"
+                        placeholder={translateUI("e.g. ABC-123")}
                     />
 
                     <Input
-                        label="Mileage"
+                        label={translateUI("Mileage")}
                         type="number"
                         value={form.mileage}
                         onChange={(value) =>
                             updateField("mileage", value)
                         }
-                        placeholder="e.g. 45000"
+                        placeholder={translateUI("e.g. 45000")}
                     />
 
                     <Input
-                        label="Location"
+                        label={translateUI("Location")}
                         value={form.location}
                         onChange={(value) =>
                             updateField("location", value)
                         }
-                        placeholder="e.g. Lahore Showroom"
+                        placeholder={translateUI("e.g. Lahore Showroom")}
                     />
 
                     <Input
-                        label="Condition"
+                        label={translateUI("Condition")}
                         value={form.condition}
                         onChange={(value) =>
                             updateField(
@@ -532,7 +526,7 @@ export default function EditVehiclePage({ params }: Props) {
                                 value
                             )
                         }
-                        placeholder="e.g. Excellent"
+                        placeholder={translateUI("e.g. Excellent")}
                     />
                 </div>
             </section>
@@ -541,12 +535,10 @@ export default function EditVehiclePage({ params }: Props) {
             <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="mb-5">
                     <h2 className="text-sm font-semibold text-slate-900">
-                        Vehicle Images
-                    </h2>
+                        {translateUI("Vehicle Images")} </h2>
 
                     <p className="mt-1 text-xs text-slate-500">
-                        Existing images can be removed and new images can be added.
-                    </p>
+                        {translateUI("Existing images can be removed and new images can be added.")} </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
@@ -559,12 +551,10 @@ export default function EditVehiclePage({ params }: Props) {
                         </div>
 
                         <span className="text-sm font-semibold text-slate-700">
-                            Add Images
-                        </span>
+                            {translateUI("Add Images")} </span>
 
                         <span className="mt-1 text-xs text-slate-400">
-                            PNG, JPG or WEBP
-                        </span>
+                            {translateUI("PNG, JPG or WEBP")} </span>
 
                         <input
                             id="edit-vehicle-images"
@@ -595,7 +585,7 @@ export default function EditVehiclePage({ params }: Props) {
                                     )
                                 }
                                 className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 text-slate-600 shadow hover:bg-red-50 hover:text-red-600"
-                                aria-label="Remove image"
+                                aria-label={translateUI("Remove image")}
                             >
                                 <X className="h-4 w-4" />
                             </button>
@@ -619,14 +609,13 @@ export default function EditVehiclePage({ params }: Props) {
                                     removeNewImage(index)
                                 }
                                 className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 text-slate-600 shadow hover:bg-red-50 hover:text-red-600"
-                                aria-label="Remove image"
+                                aria-label={translateUI("Remove image")}
                             >
                                 <X className="h-4 w-4" />
                             </button>
 
                             <div className="absolute bottom-2 left-2 rounded-md bg-sky-600 px-2 py-1 text-[10px] font-semibold text-white">
-                                New
-                            </div>
+                                {translateUI("New")} </div>
                         </div>
                     ))}
                 </div>
@@ -635,7 +624,7 @@ export default function EditVehiclePage({ params }: Props) {
                     <Upload className="h-3.5 w-3.5" />
 
                     {images.length + imagePreviews.length === 0
-                        ? "No images selected."
+                        ? translateUI("No images selected.")
                         : `${images.length + imagePreviews.length} ${images.length + imagePreviews.length === 1
                             ? "image"
                             : "images"
@@ -646,8 +635,7 @@ export default function EditVehiclePage({ params }: Props) {
             {/* Notes */}
             <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <label className="mb-2 block text-sm font-semibold text-slate-800">
-                    Notes
-                </label>
+                    {translateUI("Notes")} </label>
 
                 <textarea
                     value={form.notes}
@@ -658,7 +646,7 @@ export default function EditVehiclePage({ params }: Props) {
                         )
                     }
                     rows={5}
-                    placeholder="Add any additional notes..."
+                    placeholder={translateUI("Add any additional notes...")}
                     className="w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                 />
             </section>
@@ -669,8 +657,7 @@ export default function EditVehiclePage({ params }: Props) {
                     href={`/inventory/${id}`}
                     className="inline-flex h-10 items-center rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                 >
-                    Cancel
-                </Link>
+                    {translateUI("Cancel")} </Link>
 
                 <button
                     type="button"
@@ -679,7 +666,7 @@ export default function EditVehiclePage({ params }: Props) {
                     className="inline-flex h-10 items-center gap-2 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Save className="h-4 w-4" />
-                    {saving ? "Saving..." : "Save Changes"}
+                    {saving ? translateUI("Saving...") : translateUI("Save Changes")}
                 </button>
             </div>
         </div>
@@ -701,12 +688,13 @@ function Input({
     placeholder?: string;
     type?: string;
 }) {
+  useLang();
     return (
         <div>
             <label className="mb-1.5 block text-xs font-semibold text-slate-700">
                 {label}{" "}
                 {required && (
-                    <span className="text-red-600">*</span>
+                    <span className="text-red-600">{translateUI("*")}</span>
                 )}
             </label>
 

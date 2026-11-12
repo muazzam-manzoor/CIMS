@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Pencil, Plus, Trash, X } from "lucide-react";
@@ -86,6 +87,7 @@ export function SaleDetailsModal({
   onChanged,
   openAddForm = false,
 }: Props) {
+  useLang();
   const confirm = useConfirm();
 
   const [sale, setSale] = useState<Sale | null>(null);
@@ -264,9 +266,9 @@ export function SaleDetailsModal({
           {/* Header */}
           <div className="flex items-start justify-between border-b border-slate-100 px-5 py-4 sm:px-6 sm:py-5">
             <div className="min-w-0">
-              <h2 className="text-xl font-bold text-slate-900">Sale details</h2>
+              <h2 className="text-xl font-bold text-slate-900">{translateUI("Sale details")}</h2>
               <p className="mt-1 truncate text-sm text-slate-500">
-                {carName || "Loading..."}
+                {carName || translateUI("Loading...")}
               </p>
             </div>
             <button
@@ -288,23 +290,23 @@ export function SaleDetailsModal({
               <div className="overflow-y-auto p-5 sm:p-6">
                 {isReturned && (
                   <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                    Returned on{" "}
-                    {sale.returnDate ? formatDate(sale.returnDate) : "—"}.
-                    Refunded {formatMoney(sale.refundAmount ?? 0)}.
-                    {sale.returnReason ? ` Reason: ${sale.returnReason}` : ""}
+                    {translateUI("Returned on")}{" "}
+                    {sale.returnDate ? formatDate(sale.returnDate) : translateUI("—")}{translateUI(". Refunded")} {formatMoney(sale.refundAmount ?? 0)}{translateUI(".")} {sale.returnReason ? ` Reason: ${sale.returnReason}` : ""}
                   </div>
                 )}
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Row
-                    label="Sale type"
-                    value={sale.saleType === "CUSTOMER" ? "Customer" : "Auction"}
+                    label={translateUI("Sale type")}
+                    value={translateUI(
+                      sale.saleType === "CUSTOMER" ? "Customer" : "Auction",
+                    )}
                   />
-                  <Row label="Sale price" value={formatMoney(sale.salePrice)} />
-                  <Row label="Total paid" value={formatMoney(sale.totalPaid)} />
-                  <Row label="Remaining" value={formatMoney(sale.remaining)} />
-                  <Row label="Sale date" value={formatDate(sale.saleDate)} />
-                  <Row label="Chassis number" value={v?.chassisNumber || "—"} />
+                  <Row label={translateUI("Sale price")} value={formatMoney(sale.salePrice)} />
+                  <Row label={translateUI("Total paid")} value={formatMoney(sale.totalPaid)} />
+                  <Row label={translateUI("Remaining")} value={formatMoney(sale.remaining)} />
+                  <Row label={translateUI("Sale date")} value={formatDate(sale.saleDate)} />
+                  <Row label={translateUI("Chassis number")} value={v?.chassisNumber || "—"} />
                 </div>
 
                 {/* Payments */}
@@ -312,10 +314,12 @@ export function SaleDetailsModal({
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <h3 className="text-sm font-semibold text-slate-900">
-                        Payment history
-                      </h3>
+                        {translateUI("Payment history")} </h3>
                       <p className="mt-0.5 text-xs text-slate-500">
-                        {payments.length} entr{payments.length === 1 ? "y" : "ies"}
+                        {payments.length}{" "}
+                        {translateUI(
+                          payments.length === 1 ? "entry" : "entries",
+                        )}
                       </p>
                     </div>
 
@@ -329,7 +333,7 @@ export function SaleDetailsModal({
                           className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-3.5 py-2 text-sm font-semibold text-white hover:bg-slate-800"
                         >
                           <Plus className="h-4 w-4" />
-                          {showForm ? "Close form" : "Add payment"}
+                          {translateUI(showForm ? "Close form" : "Add payment")}
                         </button>
                       )}
                       {!isReturned && sale.totalPaid > 0 && (
@@ -337,8 +341,7 @@ export function SaleDetailsModal({
                           href={`/payments?returnSale=${sale._id}`}
                           className="inline-flex items-center rounded-xl border border-red-200 bg-white px-3.5 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
                         >
-                          Return payment
-                        </Link>
+                          {translateUI("Return payment")} </Link>
                       )}
                     </div>
                   </div>
@@ -346,17 +349,21 @@ export function SaleDetailsModal({
                   {showForm && !isReturned && (
                     <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                       <p className="text-sm font-semibold text-slate-900">
-                        {editingId ? "Edit payment" : "Add payment"}
+                        {translateUI(
+                          editingId ? "Edit payment" : "Add payment",
+                        )}
                       </p>
                       <p className="mt-1 mb-4 text-xs text-slate-500">
-                        {editingId ? "Most you can enter" : "Still to pay"}:{" "}
+                        {translateUI(
+                          editingId ? "Most you can enter" : "Still to pay",
+                        )}{translateUI(":")}{" "}
                         <span className="font-semibold text-amber-600">
                           {formatMoney(maxAllowed)}
                         </span>
                       </p>
 
                       <div className="grid gap-4 sm:grid-cols-2">
-                        <Field label="Amount">
+                        <Field label={translateUI("Amount")}>
                           <input
                             type="number"
                             min="0.01"
@@ -366,7 +373,7 @@ export function SaleDetailsModal({
                             onChange={(e) =>
                               setForm((f) => ({ ...f, amount: e.target.value }))
                             }
-                            placeholder="0"
+                            placeholder={translateUI("0")}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                           />
                           <button
@@ -379,11 +386,10 @@ export function SaleDetailsModal({
                             }
                             className="mt-1 text-xs font-medium text-sky-700 hover:underline"
                           >
-                            Pay everything ({formatMoney(maxAllowed)})
-                          </button>
+                            {translateUI("Pay everything (")}{formatMoney(maxAllowed)}{translateUI(")")} </button>
                         </Field>
 
-                        <Field label="Date">
+                        <Field label={translateUI("Date")}>
                           <input
                             type="date"
                             value={form.date}
@@ -394,7 +400,7 @@ export function SaleDetailsModal({
                           />
                         </Field>
 
-                        <Field label="How was it paid?">
+                        <Field label={translateUI("How was it paid?")}>
                           <select
                             value={form.method}
                             onChange={(e) =>
@@ -413,13 +419,13 @@ export function SaleDetailsModal({
                           </select>
                         </Field>
 
-                        <Field label="Note (optional)">
+                        <Field label={translateUI("Note (optional)")}>
                           <input
                             value={form.notes}
                             onChange={(e) =>
                               setForm((f) => ({ ...f, notes: e.target.value }))
                             }
-                            placeholder="Payment details..."
+                            placeholder={translateUI("Payment details...")}
                             className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
                           />
                         </Field>
@@ -432,8 +438,7 @@ export function SaleDetailsModal({
                           disabled={saving}
                           className="h-10 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
                         >
-                          Cancel
-                        </button>
+                          {translateUI("Cancel")} </button>
                         <button
                           type="button"
                           onClick={() => void save()}
@@ -441,10 +446,10 @@ export function SaleDetailsModal({
                           className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-60"
                         >
                           {saving
-                            ? "Saving..."
+                            ? translateUI("Saving...")
                             : editingId
-                              ? "Update payment"
-                              : "Save payment"}
+                              ? translateUI("Update payment")
+                              : translateUI("Save payment")}
                         </button>
                       </div>
                     </div>
@@ -453,8 +458,7 @@ export function SaleDetailsModal({
                   <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200">
                     {payments.length === 0 ? (
                       <div className="flex h-28 items-center justify-center text-sm text-slate-500">
-                        No payments recorded for this sale.
-                      </div>
+                        {translateUI("No payments recorded for this sale.")} </div>
                     ) : (
                       <div className="divide-y divide-slate-100">
                         {payments.map((p) => {
@@ -471,13 +475,13 @@ export function SaleDetailsModal({
                                       refund ? "text-red-600" : "text-slate-900"
                                     }`}
                                   >
-                                    {refund ? "−" : ""}
+                                    {refund ? translateUI("−") : ""}
                                     {formatMoney(p.amount)}
                                   </p>
                                   <span className="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
                                     {refund
                                       ? "Returned to customer"
-                                      : methodLabel(p.paymentMethod)}
+                                      : translateUI(methodLabel(p.paymentMethod))}
                                   </span>
                                 </div>
                                 <p className="mt-1 text-xs text-slate-500">
@@ -496,7 +500,7 @@ export function SaleDetailsModal({
                                     <button
                                       type="button"
                                       onClick={() => startEdit(p)}
-                                      title="Edit payment"
+                                      title={translateUI("Edit payment")}
                                       className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                                     >
                                       <Pencil className="h-4 w-4" />
@@ -505,7 +509,7 @@ export function SaleDetailsModal({
                                   <button
                                     type="button"
                                     onClick={() => void remove(p)}
-                                    title="Delete payment"
+                                    title={translateUI("Delete payment")}
                                     className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"
                                   >
                                     <Trash className="h-4 w-4" />
@@ -524,13 +528,13 @@ export function SaleDetailsModal({
               {/* Footer */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 bg-slate-50 px-5 py-4 sm:px-6">
                 <div>
-                  <p className="text-xs text-slate-500">Payment status</p>
+                  <p className="text-xs text-slate-500">{translateUI("Payment status")}</p>
                   <span
                     className={`mt-1 inline-flex rounded-lg px-2.5 py-1 text-xs font-semibold ${
                       badge(sale.paymentStatus).cls
                     }`}
                   >
-                    {badge(sale.paymentStatus).label}
+                    {translateUI(badge(sale.paymentStatus).label)}
                   </span>
                 </div>
 
@@ -541,11 +545,10 @@ export function SaleDetailsModal({
                       onClick={() => setReturnOpen(true)}
                       className="h-10 rounded-xl border border-red-200 bg-white px-4 text-sm font-semibold text-red-600 hover:bg-red-50"
                     >
-                      Return sale
-                    </button>
+                      {translateUI("Return sale")} </button>
                   )}
                   <div className="text-right">
-                    <p className="text-xs text-slate-500">Remaining</p>
+                    <p className="text-xs text-slate-500">{translateUI("Remaining")}</p>
                     <p className="mt-1 text-lg font-bold text-slate-900">
                       {formatMoney(sale.remaining)}
                     </p>
@@ -575,11 +578,12 @@ export function SaleDetailsModal({
 }
 
 function Row({ label, value }: { label: string; value: string }) {
+  useLang();
   return (
     <div className="flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-4 py-3">
-      <span className="text-sm text-slate-500">{label}</span>
+      <span className="text-sm text-slate-500">{translateUI(label)}</span>
       <span className="truncate text-sm font-semibold text-slate-900">
-        {value}
+        {translateUI(value)}
       </span>
     </div>
   );
@@ -592,10 +596,11 @@ function Field({
   label: string;
   children: React.ReactNode;
 }) {
+  useLang();
   return (
     <div>
       <label className="mb-1.5 block text-sm font-medium text-slate-700">
-        {label}
+        {translateUI(label)}
       </label>
       {children}
     </div>

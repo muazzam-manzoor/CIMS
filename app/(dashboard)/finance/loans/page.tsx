@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useState } from "react";
 import {
   ArrowDownLeft,
@@ -128,6 +129,7 @@ function txLabel(type: string) {
 }
 
 export default function LoansPage() {
+  useLang();
   const confirm = useConfirm();
 
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -457,12 +459,9 @@ export default function LoansPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            Loans
-          </h1>
+            {translateUI("Loans")} </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Money you borrowed, or money you lent to a partner, and how much
-            is still to be paid back.
-          </p>
+            {translateUI("Money you borrowed, or money you lent to a partner, and how much is still to be paid back.")} </p>
         </div>
 
         <button
@@ -471,34 +470,29 @@ export default function LoansPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800"
         >
           <Plus className="h-4 w-4" />
-          Add loan
-        </button>
+          {translateUI("Add loan")} </button>
       </div>
 
       {/* Summary (all loans, not only this page) */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <p className="text-sm font-medium text-slate-500">
-            You still have to pay back
-          </p>
+            {translateUI("You still have to pay back")} </p>
           <p className="mt-2 text-2xl font-semibold text-red-600">
-            {totals ? formatMoney(totals.youOwe) : "—"}
+            {totals ? formatMoney(totals.youOwe) : translateUI("—")}
           </p>
           <p className="mt-1 text-xs text-slate-400">
-            Money you borrowed and have not returned yet
-          </p>
+            {translateUI("Money you borrowed and have not returned yet")} </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <p className="text-sm font-medium text-slate-500">
-            Partners still have to pay you
-          </p>
+            {translateUI("Partners still have to pay you")} </p>
           <p className="mt-2 text-2xl font-semibold text-amber-600">
-            {totals ? formatMoney(totals.partnersOwe) : "—"}
+            {totals ? formatMoney(totals.partnersOwe) : translateUI("—")}
           </p>
           <p className="mt-1 text-xs text-slate-400">
-            Money you lent to partners and not received back yet
-          </p>
+            {translateUI("Money you lent to partners and not received back yet")} </p>
         </div>
       </div>
 
@@ -516,7 +510,7 @@ export default function LoansPage() {
           <input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search by name..."
+            placeholder={translateUI("Search by name...")}
             className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pr-3 pl-9 text-sm outline-none focus:border-sky-400 focus:bg-white focus:ring-4 focus:ring-sky-100"
           />
         </div>
@@ -529,9 +523,9 @@ export default function LoansPage() {
           }}
           className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400"
         >
-          <option value="ALL">All loans</option>
-          <option value="BUSINESS_BORROWED">We borrowed</option>
-          <option value="PARTNER_ADVANCE">We lent to partner</option>
+          <option value="ALL">{translateUI("All loans")}</option>
+          <option value="BUSINESS_BORROWED">{translateUI("We borrowed")}</option>
+          <option value="PARTNER_ADVANCE">{translateUI("We lent to partner")}</option>
         </select>
 
         <select
@@ -542,18 +536,17 @@ export default function LoansPage() {
           }}
           className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm outline-none focus:border-sky-400"
         >
-          <option value="ALL">Any status</option>
-          <option value="ACTIVE">Not fully paid</option>
-          <option value="SETTLED">Fully paid</option>
-          <option value="VOIDED">Cancelled</option>
+          <option value="ALL">{translateUI("Any status")}</option>
+          <option value="ACTIVE">{translateUI("Not fully paid")}</option>
+          <option value="SETTLED">{translateUI("Fully paid")}</option>
+          <option value="VOIDED">{translateUI("Cancelled")}</option>
         </select>
 
         <button
           type="submit"
           className="h-10 rounded-xl bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-800"
         >
-          Search
-        </button>
+          {translateUI("Search")} </button>
 
         <button
           type="button"
@@ -562,17 +555,16 @@ export default function LoansPage() {
           className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
+          {translateUI("Refresh")} </button>
       </form>
 
       {/* Table */}
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <div className="flex flex-col gap-1 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-sm font-semibold text-slate-900">All loans</h2>
+          <h2 className="text-sm font-semibold text-slate-900">{translateUI("All loans")}</h2>
           <p className="text-xs text-slate-500">
             {totalCount === 0
-              ? "No loans"
+              ? translateUI("No loans")
               : `Showing ${(page - 1) * LIMIT + 1}–${Math.min(
                   page * LIMIT,
                   totalCount,
@@ -588,11 +580,9 @@ export default function LoansPage() {
           <div className="flex min-h-56 flex-col items-center justify-center px-5 text-center">
             <Wallet className="h-8 w-8 text-slate-300" />
             <p className="mt-3 text-sm font-semibold text-slate-900">
-              No loans found
-            </p>
+              {translateUI("No loans found")} </p>
             <p className="mt-1 text-sm text-slate-500">
-              Press “Add loan” when you borrow money or lend to a partner.
-            </p>
+              {translateUI("Press “Add loan” when you borrow money or lend to a partner.")} </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -633,8 +623,7 @@ export default function LoansPage() {
                         </p>
                         {loan.counterpartyType === "PARTNER" && (
                           <p className="mt-1 text-xs text-slate-400">
-                            Partner
-                          </p>
+                            {translateUI("Partner")} </p>
                         )}
                       </td>
 
@@ -645,7 +634,7 @@ export default function LoansPage() {
                           ) : (
                             <ArrowUpRight className="h-4 w-4 text-amber-600" />
                           )}
-                          {kindLabel(loan.direction)}
+                          {translateUI(kindLabel(loan.direction))}
                         </span>
                       </td>
 
@@ -668,7 +657,7 @@ export default function LoansPage() {
                         <span
                           className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${st.cls}`}
                         >
-                          {st.label}
+                          {translateUI(st.label)}
                         </span>
                       </td>
 
@@ -684,8 +673,8 @@ export default function LoansPage() {
                                 }}
                                 title={
                                   isBorrowed(loan)
-                                    ? "We paid some back"
-                                    : "Partner paid some back"
+                                    ? translateUI("We paid some back")
+                                    : translateUI("Partner paid some back")
                                 }
                                 className="flex h-8 w-8 items-center justify-center rounded-lg text-emerald-700 hover:bg-emerald-50"
                               >
@@ -695,7 +684,7 @@ export default function LoansPage() {
                           <button
                             type="button"
                             onClick={() => void openHistory(loan)}
-                            title="See payments"
+                            title={translateUI("See payments")}
                             className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100"
                           >
                             <Eye className="h-4 w-4" />
@@ -704,7 +693,7 @@ export default function LoansPage() {
                             <button
                               type="button"
                               onClick={() => openEdit(loan)}
-                              title="Edit"
+                              title={translateUI("Edit")}
                               className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100"
                             >
                               <Pencil className="h-4 w-4" />
@@ -713,7 +702,7 @@ export default function LoansPage() {
                           <button
                             type="button"
                             onClick={() => void handleDelete(loan)}
-                            title="Delete"
+                            title={translateUI("Delete")}
                             className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -730,7 +719,7 @@ export default function LoansPage() {
 
         <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4">
           <p className="text-sm text-slate-500">
-            Page {page} of {totalPages}
+            {translateUI("Page")} {page} {translateUI("of")} {totalPages}
           </p>
           <div className="flex gap-2">
             <button
@@ -739,16 +728,14 @@ export default function LoansPage() {
               disabled={loading || page <= 1}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm disabled:opacity-40"
             >
-              Previous
-            </button>
+              {translateUI("Previous")} </button>
             <button
               type="button"
               onClick={() => setPage((c) => c + 1)}
               disabled={loading || !hasMore}
               className="h-9 rounded-lg border border-slate-200 px-3 text-sm disabled:opacity-40"
             >
-              Next
-            </button>
+              {translateUI("Next")} </button>
           </div>
         </div>
       </div>
@@ -760,12 +747,12 @@ export default function LoansPage() {
             <div className="sticky top-0 flex items-center justify-between border-b border-slate-100 bg-white px-5 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  {editing ? "Edit loan" : "Add loan"}
+                  {editing ? translateUI("Edit loan") : translateUI("Add loan")}
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
                   {editing
-                    ? `${kindLabel(editing.direction)} — ${editing.counterpartyName}`
-                    : "What happened?"}
+                    ? `${translateUI(kindLabel(editing.direction))} — ${editing.counterpartyName}`
+                    : translateUI("What happened?")}
                 </p>
               </div>
               <button
@@ -823,8 +810,8 @@ export default function LoansPage() {
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
                       {form.direction === "BUSINESS_BORROWED"
-                        ? "Who lent you the money?"
-                        : "Which partner?"}
+                        ? translateUI("Who lent you the money?")
+                        : translateUI("Which partner?")}
                     </label>
                     <select
                       value={form.partnerId}
@@ -833,8 +820,8 @@ export default function LoansPage() {
                     >
                       <option value="">
                         {form.direction === "BUSINESS_BORROWED"
-                          ? "Someone else (bank, friend, other)"
-                          : "Select partner"}
+                          ? translateUI("Someone else (bank, friend, other)")
+                          : translateUI("Select partner")}
                       </option>
                       {partners.map((p) => (
                         <option key={p._id} value={p._id}>
@@ -846,8 +833,7 @@ export default function LoansPage() {
                     {partners.length === 0 &&
                       form.direction === "PARTNER_ADVANCE" && (
                         <p className="mt-1 text-xs text-amber-700">
-                          Add a partner first on the Partners page.
-                        </p>
+                          {translateUI("Add a partner first on the Partners page.")} </p>
                       )}
                   </div>
                 </>
@@ -859,13 +845,12 @@ export default function LoansPage() {
                 (editing && !editingPartnerLoan)) && (
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Name of lender
-                  </label>
+                    {translateUI("Name of lender")} </label>
                   <input
                     value={form.lenderName}
                     onChange={(e) => setF({ lenderName: e.target.value })}
                     maxLength={150}
-                    placeholder="e.g. HBL Bank, Bilal Ahmed"
+                    placeholder={translateUI("e.g. HBL Bank, Bilal Ahmed")}
                     className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400"
                   />
                 </div>
@@ -874,23 +859,21 @@ export default function LoansPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Amount
-                  </label>
+                    {translateUI("Amount")} </label>
                   <input
                     type="number"
                     min="0.01"
                     step="0.01"
                     value={form.amount}
                     onChange={(e) => setF({ amount: e.target.value })}
-                    placeholder="0"
+                    placeholder={translateUI("0")}
                     className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400"
                   />
                 </div>
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Date
-                  </label>
+                    {translateUI("Date")} </label>
                   <input
                     type="date"
                     value={form.loanDate}
@@ -901,8 +884,7 @@ export default function LoansPage() {
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Pay back by (optional)
-                  </label>
+                    {translateUI("Pay back by (optional)")} </label>
                   <input
                     type="date"
                     value={form.dueDate}
@@ -915,8 +897,7 @@ export default function LoansPage() {
                 {!editing && (
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                      How was it paid?
-                    </label>
+                      {translateUI("How was it paid?")} </label>
                     <select
                       value={form.method}
                       onChange={(e) => setF({ method: e.target.value })}
@@ -934,14 +915,13 @@ export default function LoansPage() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Note (optional)
-                </label>
+                  {translateUI("Note (optional)")} </label>
                 <textarea
                   rows={3}
                   value={form.notes}
                   maxLength={2000}
                   onChange={(e) => setF({ notes: e.target.value })}
-                  placeholder="Why was it needed? Any agreement?"
+                  placeholder={translateUI("Why was it needed? Any agreement?")}
                   className="w-full resize-none rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400"
                 />
               </div>
@@ -954,15 +934,14 @@ export default function LoansPage() {
                 disabled={saving}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600 disabled:opacity-50"
               >
-                Cancel
-              </button>
+                {translateUI("Cancel")} </button>
               <button
                 type="button"
                 onClick={() => void handleSave()}
                 disabled={saving}
                 className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white disabled:opacity-50"
               >
-                {saving ? "Saving..." : editing ? "Save changes" : "Save loan"}
+                {saving ? translateUI("Saving...") : editing ? translateUI("Save changes") : translateUI("Save loan")}
               </button>
             </div>
           </div>
@@ -977,8 +956,8 @@ export default function LoansPage() {
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
                   {isBorrowed(payLoan)
-                    ? "We paid back some money"
-                    : "Partner paid back some money"}
+                    ? translateUI("We paid back some money")
+                    : translateUI("Partner paid back some money")}
                 </h2>
                 <p className="mt-1 text-xs text-slate-500">
                   {payLoan.counterpartyName}
@@ -995,7 +974,7 @@ export default function LoansPage() {
 
             <div className="space-y-4 p-5">
               <div className="rounded-xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">Still to pay</p>
+                <p className="text-sm text-slate-500">{translateUI("Still to pay")}</p>
                 <p className="mt-1 text-2xl font-semibold text-slate-900">
                   {formatMoney(payLoan.outstandingPrincipal)}
                 </p>
@@ -1003,8 +982,7 @@ export default function LoansPage() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Amount
-                </label>
+                  {translateUI("Amount")} </label>
                 <input
                   type="number"
                   min="0.01"
@@ -1014,7 +992,7 @@ export default function LoansPage() {
                   onChange={(e) =>
                     setPayForm((f) => ({ ...f, amount: e.target.value }))
                   }
-                  placeholder="0"
+                  placeholder={translateUI("0")}
                   className="h-11 w-full rounded-xl border border-slate-200 px-3 text-sm outline-none focus:border-sky-400"
                 />
                 <button
@@ -1027,15 +1005,13 @@ export default function LoansPage() {
                   }
                   className="mt-1 text-xs font-medium text-sky-700 hover:underline"
                 >
-                  Pay everything ({formatMoney(payLoan.outstandingPrincipal)})
-                </button>
+                  {translateUI("Pay everything (")}{formatMoney(payLoan.outstandingPrincipal)}{translateUI(")")} </button>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    Date
-                  </label>
+                    {translateUI("Date")} </label>
                   <input
                     type="date"
                     value={payForm.date}
@@ -1047,8 +1023,7 @@ export default function LoansPage() {
                 </div>
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                    How was it paid?
-                  </label>
+                    {translateUI("How was it paid?")} </label>
                   <select
                     value={payForm.method}
                     onChange={(e) =>
@@ -1067,8 +1042,7 @@ export default function LoansPage() {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">
-                  Note (optional)
-                </label>
+                  {translateUI("Note (optional)")} </label>
                 <textarea
                   rows={2}
                   value={payForm.notes}
@@ -1088,15 +1062,14 @@ export default function LoansPage() {
                 disabled={saving}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600"
               >
-                Cancel
-              </button>
+                {translateUI("Cancel")} </button>
               <button
                 type="button"
                 onClick={() => void handlePay()}
                 disabled={saving}
                 className="h-10 rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white disabled:opacity-50"
               >
-                {saving ? "Saving..." : "Save"}
+                {saving ? translateUI("Saving...") : translateUI("Save")}
               </button>
             </div>
           </div>
@@ -1110,11 +1083,10 @@ export default function LoansPage() {
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">
-                  Payments for this loan
-                </h2>
+                  {translateUI("Payments for this loan")} </h2>
                 <p className="mt-1 text-xs text-slate-500">
-                  {historyLoan.counterpartyName} ·{" "}
-                  {kindLabel(historyLoan.direction)}
+                  {historyLoan.counterpartyName} {translateUI("·")}{" "}
+                  {translateUI(kindLabel(historyLoan.direction))}
                 </p>
               </div>
               <button
@@ -1147,8 +1119,7 @@ export default function LoansPage() {
               </div>
             ) : history.length === 0 ? (
               <p className="p-8 text-center text-sm text-slate-500">
-                Nothing recorded yet.
-              </p>
+                {translateUI("Nothing recorded yet.")} </p>
             ) : (
               <div className="divide-y divide-slate-100">
                 {history.map((t) => {
@@ -1165,13 +1136,12 @@ export default function LoansPage() {
                           {txLabel(t.type)}
                           {t.status === "VOIDED" && (
                             <span className="ml-2 text-xs text-red-600">
-                              Cancelled
-                            </span>
+                              {translateUI("Cancelled")} </span>
                           )}
                         </p>
                         <p className="text-xs text-slate-500">
-                          {formatDate(t.transactionDate)} ·{" "}
-                          {methodLabel(t.paymentMethod)}
+                          {formatDate(t.transactionDate)} {translateUI("·")}{" "}
+                          {translateUI(methodLabel(t.paymentMethod))}
                         </p>
                       </div>
                       <p
@@ -1193,8 +1163,7 @@ export default function LoansPage() {
                 onClick={() => setHistoryLoan(null)}
                 className="h-10 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-600"
               >
-                Close
-              </button>
+                {translateUI("Close")} </button>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CarFront, ChevronDown, X } from "lucide-react";
@@ -30,6 +31,7 @@ const ROW =
 const LABEL = "ml-3 hidden truncate max-lg:block group-hover/sidebar:block";
 
 export function Sidebar({ open, onClose }: SidebarProps) {
+  useLang();
   const pathname = usePathname();
   const SettingsIcon = settingsItem.icon;
 
@@ -75,7 +77,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       {/* Mobile backdrop */}
       <button
         type="button"
-        aria-label="Close menu"
+        aria-label={translateUI("Close menu")}
         tabIndex={open ? 0 : -1}
         onClick={onClose}
         className={`fixed inset-0 z-40 bg-slate-950/50 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${
@@ -99,17 +101,15 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
             <div className="ml-3 hidden min-w-0 flex-1 max-lg:block group-hover/sidebar:block">
               <p className="text-[11px] font-semibold tracking-[0.18em] text-sky-300/80 uppercase">
-                Workspace
-              </p>
+                {translateUI("Workspace")} </p>
               <h1 className="truncate text-lg font-semibold tracking-tight">
-                CIMS
-              </h1>
+                {translateUI("CIMS")} </h1>
             </div>
 
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close menu"
+              aria-label={translateUI("Close menu")}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-white/10 hover:text-white lg:hidden"
             >
               <X className="h-5 w-5" />
@@ -122,8 +122,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-5 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:none] group-hover/sidebar:[scrollbar-width:thin] max-lg:[scrollbar-width:thin]"
         >
           <p className="mb-2 hidden px-3 text-[11px] font-semibold tracking-[0.16em] text-slate-500 uppercase max-lg:block group-hover/sidebar:block">
-            Menu
-          </p>
+            {translateUI("Menu")} </p>
 
           <div className="space-y-1">
             {navigation.map((item) => {
@@ -152,7 +151,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                   {hasChildren ? (
                     <button
                       type="button"
-                      title={item.name}
+                      title={translateUI(item.name)}
                       aria-expanded={isExpanded}
                       onClick={() =>
                         setExpandedMenu(isExpanded ? null : item.href)
@@ -166,7 +165,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                       </span>
 
                       <span className={`${LABEL} flex-1 text-left`}>
-                        {item.name}
+                        {translateUI(item.name)}
                       </span>
 
                       <ChevronDown
@@ -178,7 +177,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                   ) : (
                     <Link
                       href={item.href}
-                      title={item.name}
+                      title={translateUI(item.name)}
                       onClick={onClose}
                       className={`${ROW} ${rowTone}`}
                     >
@@ -188,7 +187,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                         <Icon className="h-4 w-4" />
                       </span>
 
-                      <span className={LABEL}>{item.name}</span>
+                      <span className={LABEL}>{translateUI(item.name)}</span>
                     </Link>
                   )}
 
@@ -218,7 +217,9 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                                 childActive ? "bg-sky-400" : "bg-slate-500"
                               }`}
                             />
-                            <span className="truncate">{child.name}</span>
+                            <span className="truncate">
+                              {translateUI(child.name)}
+                            </span>
                           </Link>
                         );
                       })}
@@ -234,7 +235,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         <div className="shrink-0 border-t border-white/10 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
           <Link
             href={settingsItem.href}
-            title="Settings"
+            title={translateUI("Settings")}
             onClick={onClose}
             className={`${ROW} ${
               isNavActive(pathname, settingsItem.href)
@@ -246,7 +247,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               <SettingsIcon className="h-4 w-4" />
             </span>
 
-            <span className={LABEL}>Settings</span>
+            <span className={LABEL}>{translateUI("Settings")}</span>
           </Link>
         </div>
       </aside>

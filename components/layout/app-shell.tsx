@@ -1,4 +1,5 @@
 "use client";
+import { useLang } from "@/components/language-provider";
 
 import { useCallback, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -6,6 +7,7 @@ import { AppHeader } from "@/components/app-header";
 import { Sidebar } from "@/components/layout/sidebar";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  useLang();
   const pathname = usePathname();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);

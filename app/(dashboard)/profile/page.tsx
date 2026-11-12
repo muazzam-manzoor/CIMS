@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useEffect, useState } from "react";
 import { Mail, ShieldCheck, User } from "lucide-react";
 
@@ -12,6 +13,7 @@ type Admin = {
 };
 
 export default function ProfilePage() {
+  useLang();
   const [admin, setAdmin] =
     useState<Admin | null>(null);
 
@@ -56,8 +58,7 @@ export default function ProfilePage() {
   if (!admin) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
-        Unable to load profile.
-      </div>
+        {translateUI("Unable to load profile.")} </div>
     );
   }
 
@@ -65,12 +66,10 @@ export default function ProfilePage() {
     <div className="mx-auto w-full max-w-3xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">
-          Profile
-        </h1>
+          {translateUI("Profile")} </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          Manage your account information.
-        </p>
+          {translateUI("Manage your account information.")} </p>
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -97,7 +96,7 @@ export default function ProfilePage() {
             icon={
               <User className="h-4 w-4" />
             }
-            label="Name"
+            label={translateUI("Name")}
             value={admin.name}
           />
 
@@ -105,7 +104,7 @@ export default function ProfilePage() {
             icon={
               <Mail className="h-4 w-4" />
             }
-            label="Email"
+            label={translateUI("Email")}
             value={admin.email}
           />
 
@@ -113,7 +112,7 @@ export default function ProfilePage() {
             icon={
               <ShieldCheck className="h-4 w-4" />
             }
-            label="Role"
+            label={translateUI("Role")}
             value={admin.role}
           />
         </div>
@@ -131,6 +130,7 @@ function ProfileItem({
   label: string;
   value: string;
 }) {
+  useLang();
   return (
     <div className="rounded-xl bg-slate-50 p-4">
       <div className="flex items-center gap-2 text-slate-400">

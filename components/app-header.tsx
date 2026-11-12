@@ -1,5 +1,6 @@
 "use client";
 
+import { translateUI, useLang } from "@/components/language-provider";
 import { useEffect, useRef, useState } from "react";
 import {
   Bell,
@@ -28,6 +29,7 @@ type Admin = {
 export function AppHeader({ onMenuClick }: AppHeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { lang, setLang } = useLang();
 
   const { title, description } = getPageMeta(pathname);
 
@@ -95,23 +97,36 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
             type="button"
             onClick={onMenuClick}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm lg:hidden"
-            aria-label="Open menu"
+            aria-label={translateUI("Open menu")}
           >
             <Menu className="h-4 w-4" />
           </button>
 
           <div className="min-w-0">
             <h1 className="truncate text-lg font-semibold tracking-tight text-slate-900">
-              {title}
+              {translateUI(title)}
             </h1>
             <p className="hidden truncate text-xs text-slate-500 sm:block">
-              {description}
+              {translateUI(description)}
             </p>
           </div>
         </div>
 
         {/* Right */}
         <div className="flex items-center gap-2 sm:gap-3">
+          <label className="sr-only" htmlFor="language-select">
+            {translateUI("Language")}
+          </label>
+          <select
+            id="language-select"
+            value={lang}
+            onChange={(event) => setLang(event.target.value as "en" | "ja")}
+            className="h-10 rounded-xl border border-slate-200 bg-white px-2 text-sm text-slate-700 shadow-sm outline-none transition hover:border-slate-300 focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+          >
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+          </select>
+
           {/* Car search (desktop) */}
           <div className="hidden md:block">
             <VehicleSearch />
@@ -122,7 +137,11 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
             type="button"
             onClick={() => setMobileSearch((open) => !open)}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-slate-300 hover:text-slate-800 md:hidden"
-            aria-label={mobileSearch ? "Close search" : "Search cars"}
+            aria-label={
+              mobileSearch
+                ? translateUI("Close search")
+                : translateUI("Search cars")
+            }
             aria-expanded={mobileSearch}
           >
             {mobileSearch ? (
@@ -157,10 +176,10 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
 
               <div className="hidden text-left leading-tight sm:block">
                 <p className="max-w-[120px] truncate text-xs font-semibold text-slate-900">
-                  {admin?.name || "Admin"}
+                  {admin?.name || translateUI("Admin")}
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  {admin?.role || "OWNER"}
+                  {translateUI(admin?.role || "OWNER")}
                 </p>
               </div>
 
@@ -175,13 +194,13 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
               <div className="absolute top-full right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl">
                 <div className="border-b border-slate-100 px-3 py-2.5">
                   <p className="truncate text-sm font-semibold text-slate-900">
-                    {admin?.name || "Admin"}
+                    {admin?.name || translateUI("Admin")}
                   </p>
                   <p className="truncate text-xs text-slate-500">
                     {admin?.email || "—"}
                   </p>
                   <p className="mt-1 text-[11px] font-medium text-slate-400">
-                    {admin?.role || "OWNER"}
+                    {translateUI(admin?.role || "OWNER")}
                   </p>
                 </div>
 
@@ -191,8 +210,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   className="mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
                 >
                   <UserCircle className="h-4 w-4 text-slate-400" />
-                  Profile
-                </button>
+                  {translateUI("Profile")} </button>
 
                 <button
                   type="button"
@@ -201,7 +219,9 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <LogOut className="h-4 w-4" />
-                  {loggingOut ? "Logging out..." : "Logout"}
+                  {loggingOut
+                    ? translateUI("Logging out...")
+                    : translateUI("Logout")}
                 </button>
               </div>
             )}

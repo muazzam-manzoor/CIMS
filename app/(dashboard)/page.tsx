@@ -1,5 +1,6 @@
 "use client";
 
+import { useLang, translateUI } from "@/components/language-provider";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -57,6 +58,7 @@ const KIND = {
 } as const;
 
 export default function DashboardPage() {
+  useLang();
   const [data, setData] = useState<Dashboard | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -95,8 +97,7 @@ export default function DashboardPage() {
           onClick={() => void load()}
           className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white"
         >
-          Try again
-        </button>
+          {translateUI("Try again")} </button>
       </div>
     );
   }
@@ -108,9 +109,10 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{translateUI("Dashboard")}</h1>
           <p className="mt-1 text-sm text-slate-500">
-            What needs your attention today · {data.month.label}
+            {translateUI("What needs your attention today ·")}{" "}
+            {translateUI(data.month.label)}
           </p>
         </div>
         <button
@@ -120,42 +122,41 @@ export default function DashboardPage() {
           className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 disabled:opacity-60"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
+          {translateUI("Refresh")} </button>
       </div>
 
       {/* Main cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Cars in stock"
+          label={translateUI("Cars in stock")}
           value={String(data.stock.count)}
-          note={`Cost you ${formatMoney(data.stock.cost)} so far`}
+          note={`${translateUI("Cost you")} ${formatMoney(data.stock.cost)} ${translateUI("so far")}`}
           icon={<CarFront className="h-5 w-5" />}
           tone="bg-blue-50 text-blue-600"
           href="/inventory"
         />
         <StatCard
-          label="Sold this month"
+          label={translateUI("Sold this month")}
           value={String(data.month.soldCount)}
-          note={`Worth ${formatMoney(data.month.soldValue)}`}
+          note={`${translateUI("Worth")} ${formatMoney(data.month.soldValue)}`}
           icon={<ShoppingCart className="h-5 w-5" />}
           tone="bg-violet-50 text-violet-600"
           href="/sales"
         />
         <StatCard
-          label="Money received this month"
+          label={translateUI("Money received this month")}
           value={formatMoney(data.month.received)}
           note={
             data.month.refunded > 0
-              ? `After returning ${formatMoney(data.month.refunded)}`
-              : "From customers"
+              ? `${translateUI("After returning")} ${formatMoney(data.month.refunded)}`
+              : `${translateUI("From customers")}`
           }
           icon={<CircleDollarSign className="h-5 w-5" />}
           tone="bg-emerald-50 text-emerald-600"
           href="/payments"
         />
         <StatCard
-          label="Customers still owe you"
+          label={translateUI("Customers still owe you")}
           value={formatMoney(data.outstanding)}
           note={`${data.owedList.length ? "Unpaid balance on sold cars" : "Everyone has paid"}`}
           icon={<Wallet className="h-5 w-5" />}
@@ -169,22 +170,21 @@ export default function DashboardPage() {
       {data.money && (
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-base font-semibold text-slate-900">Your money</h2>
+            <h2 className="text-base font-semibold text-slate-900">{translateUI("Your money")}</h2>
             <Link href="/finance" className="text-xs font-semibold text-sky-700 hover:underline">
-              Open Money →
-            </Link>
+              {translateUI("Open Money →")} </Link>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
-            <Mini label="Money you should have" value={data.money.cash} tone={data.money.cash >= 0 ? "text-slate-900" : "text-red-600"} />
-            <Mini label="You owe others" value={data.money.youOwe} tone="text-red-600" />
-            <Mini label="Partners owe you" value={data.money.partnersOwe} tone="text-amber-600" />
+            <Mini label={translateUI("Money you should have")} value={data.money.cash} tone={data.money.cash >= 0 ? "text-slate-900" : "text-red-600"} />
+            <Mini label={translateUI("You owe others")} value={data.money.youOwe} tone="text-red-600" />
+            <Mini label={translateUI("Partners owe you")} value={data.money.partnersOwe} tone="text-amber-600" />
           </div>
         </div>
       )}
 
       {/* Chart + customers */}
       <div className="grid gap-5 lg:grid-cols-2">
-        <Panel title="Last 6 months" subtitle="Cars sold compared with money received">
+        <Panel title={translateUI("Last 6 months")} subtitle={translateUI("Cars sold compared with money received")}>
           <div className="flex h-44 items-end gap-3">
             {data.chart.map((c) => (
               <div key={c.label} className="flex flex-1 flex-col items-center gap-2">
@@ -200,26 +200,30 @@ export default function DashboardPage() {
                     style={{ height: `${Math.max((Math.max(c.received, 0) / chartMax) * 100, c.received > 0 ? 3 : 0)}%` }}
                   />
                 </div>
-                <span className="text-xs text-slate-500">{c.label}</span>
+                <span className="text-xs text-slate-500">
+                  {translateUI(c.label)}
+                </span>
               </div>
             ))}
           </div>
           <div className="mt-3 flex gap-4 text-xs text-slate-500">
-            <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-sky-500" /> Sold</span>
-            <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-emerald-500" /> Received</span>
+            <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-sky-500" /> {translateUI("Sold")}</span>
+            <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-emerald-500" /> {translateUI("Received")}</span>
           </div>
         </Panel>
 
-        <Panel title="Customers who still owe you" subtitle="Oldest unpaid first" link={{ href: "/sales", text: "All sales" }}>
+        <Panel title={translateUI("Customers who still owe you")} subtitle={translateUI("Oldest unpaid first")} link={{ href: "/sales", text: "All sales" }}>
           {data.owedList.length === 0 ? (
-            <Empty text="No unpaid balances. Great!" />
+            <Empty text={translateUI("No unpaid balances. Great!")} />
           ) : (
             <List>
               {data.owedList.map((o) => (
                 <Row
                   key={o.saleId}
                   title={o.name}
-                  sub={`Sold ${o.days} day${o.days === 1 ? "" : "s"} ago for ${formatMoney(o.price)}`}
+                  sub={translateUI(
+                    `Sold ${o.days} day${o.days === 1 ? "" : "s"} ago for ${formatMoney(o.price)}`,
+                  )}
                   right={formatMoney(o.remaining)}
                   rightClass="text-amber-600"
                 />
@@ -231,9 +235,9 @@ export default function DashboardPage() {
 
       {/* Stock + loans */}
       <div className="grid gap-5 lg:grid-cols-2">
-        <Panel title="Waiting longest in stock" subtitle="Cars that haven't sold yet" link={{ href: "/inventory", text: "Inventory" }}>
+        <Panel title={translateUI("Waiting longest in stock")} subtitle={translateUI("Cars that haven't sold yet")} link={{ href: "/inventory", text: "Inventory" }}>
           {data.stock.oldest.length === 0 ? (
-            <Empty text="No cars in stock." />
+            <Empty text={translateUI("No cars in stock.")} />
           ) : (
             <List>
               {data.stock.oldest.map((v) => (
@@ -241,7 +245,9 @@ export default function DashboardPage() {
                   key={v._id}
                   title={v.name}
                   sub={`Cost ${formatMoney(v.cost)}`}
-                  right={`${v.days} day${v.days === 1 ? "" : "s"}`}
+                  right={translateUI(
+                    `${v.days} day${v.days === 1 ? "" : "s"}`,
+                  )}
                   rightClass={v.days > 60 ? "text-red-600" : "text-slate-900"}
                 />
               ))}
@@ -249,16 +255,20 @@ export default function DashboardPage() {
           )}
         </Panel>
 
-        <Panel title="Loans to watch" subtitle="Overdue or due in the next 14 days" link={{ href: "/finance/loans", text: "All loans" }}>
+        <Panel title={translateUI("Loans to watch")} subtitle={translateUI("Overdue or due in the next 14 days")} link={{ href: "/finance/loans", text: "All loans" }}>
           {data.loansDue.length === 0 ? (
-            <Empty text="Nothing due soon." />
+            <Empty text={translateUI("Nothing due soon.")} />
           ) : (
             <List>
               {data.loansDue.map((l) => (
                 <Row
                   key={l._id}
-                  title={l.direction === "BUSINESS_BORROWED" ? `You owe ${l.name}` : `${l.name} owes you`}
-                  sub={`${l.overdue ? "Was due" : "Due"} ${formatDate(l.dueDate)}`}
+                  title={translateUI(
+                    l.direction === "BUSINESS_BORROWED"
+                      ? `You owe ${l.name}`
+                      : `${l.name} owes you`,
+                  )}
+                  sub={`${translateUI(l.overdue ? "Was due" : "Due")} ${formatDate(l.dueDate)}`}
                   right={formatMoney(l.outstanding)}
                   rightClass={l.overdue ? "text-red-600" : "text-slate-900"}
                 />
@@ -269,9 +279,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Activity */}
-      <Panel title="Recent activity" subtitle="Sales and payments, newest first">
+      <Panel title={translateUI("Recent activity")} subtitle={translateUI("Sales and payments, newest first")}>
         {data.activity.length === 0 ? (
-          <Empty text="Nothing yet." />
+          <Empty text={translateUI("Nothing yet.")} />
         ) : (
           <List>
             {data.activity.map((a) => {
@@ -286,7 +296,8 @@ export default function DashboardPage() {
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-slate-900">{a.title}</p>
                       <p className="text-xs text-slate-500">
-                        {k.label} · {formatDate(a.date)}
+                        {translateUI(k.label)} {translateUI("·")}{" "}
+                        {formatDate(a.date)}
                       </p>
                     </div>
                   </div>
@@ -302,12 +313,10 @@ export default function DashboardPage() {
       </Panel>
 
       <p className="text-center text-xs text-slate-400">
-        Want to know your profit? Open{" "}
+        {translateUI("Want to know your profit? Open")}{" "}
         <Link href="/reports" className="font-semibold text-sky-700 hover:underline">
-          Reports
-        </Link>
-        .
-      </p>
+          {translateUI("Reports")} </Link>
+        {translateUI(".")} </p>
     </div>
   );
 }
@@ -320,13 +329,14 @@ function StatCard({
   label: string; value: string; note: string; icon: React.ReactNode;
   tone: string; href: string; valueClass?: string;
 }) {
+  useLang();
   return (
     <Link href={href} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-slate-300">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm text-slate-500">{label}</p>
+          <p className="text-sm text-slate-500">{translateUI(label)}</p>
           <p className={`mt-2 truncate text-2xl font-bold ${valueClass}`}>{value}</p>
-          <p className="mt-1 text-xs text-slate-400">{note}</p>
+          <p className="mt-1 text-xs text-slate-400">{translateUI(note)}</p>
         </div>
         <div className={`shrink-0 rounded-xl p-3 ${tone}`}>{icon}</div>
       </div>
@@ -335,9 +345,10 @@ function StatCard({
 }
 
 function Mini({ label, value, tone }: { label: string; value: number; tone: string }) {
+  useLang();
   return (
     <div className="rounded-xl bg-slate-50 px-4 py-3">
-      <p className="text-xs text-slate-500">{label}</p>
+      <p className="text-xs text-slate-500">{translateUI(label)}</p>
       <p className={`mt-1 text-lg font-bold ${tone}`}>{formatMoney(value)}</p>
     </div>
   );
@@ -348,17 +359,23 @@ function Panel({
 }: {
   title: string; subtitle?: string; link?: { href: string; text: string }; children: React.ReactNode;
 }) {
+  useLang();
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-          {subtitle && <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>}
+          <h2 className="text-base font-semibold text-slate-900">
+            {translateUI(title)}
+          </h2>
+          {subtitle && (
+            <p className="mt-0.5 text-xs text-slate-500">
+              {translateUI(subtitle)}
+            </p>
+          )}
         </div>
         {link && (
           <Link href={link.href} className="shrink-0 text-xs font-semibold text-sky-700 hover:underline">
-            {link.text} →
-          </Link>
+            {translateUI(link.text)} {translateUI("→")} </Link>
         )}
       </div>
       {children}
@@ -371,17 +388,22 @@ const List = ({ children }: { children: React.ReactNode }) => (
 );
 
 const Empty = ({ text }: { text: string }) => (
-  <p className="py-8 text-center text-sm text-slate-500">{text}</p>
+  <p className="py-8 text-center text-sm text-slate-500">
+    {translateUI(text)}
+  </p>
 );
 
 function Row({ title, sub, right, rightClass = "text-slate-900" }: {
   title: string; sub: string; right: string; rightClass?: string;
 }) {
+  useLang();
   return (
     <div className="flex items-center justify-between gap-4 py-3">
       <div className="min-w-0">
-        <p className="truncate text-sm font-semibold text-slate-900">{title}</p>
-        <p className="text-xs text-slate-500">{sub}</p>
+        <p className="truncate text-sm font-semibold text-slate-900">
+          {translateUI(title)}
+        </p>
+        <p className="text-xs text-slate-500">{translateUI(sub)}</p>
       </div>
       <p className={`shrink-0 text-sm font-bold ${rightClass}`}>{right}</p>
     </div>
