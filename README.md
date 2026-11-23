@@ -9,6 +9,11 @@ This is a customer project that I independently developed and delivered. It is u
 Managing vehicle stock and related financial activity across separate records makes it difficult to understand the current state of the business. CIMS provides a central place to record vehicle activity and follow the money associated with that activity.
 
 ## Key capabilities
+## Password recovery
+
+Set `EMAIL_USER` and `EMAIL_PASS` in `.env.local` to a Gmail account (use a Gmail app password when required). These credentials are used to send one-time password reset codes. Reset codes expire after 10 minutes and are limited to five attempts.
+
+## Scripts
 
 - **Vehicle inventory:** maintain vehicle records and supporting images.
 - **Sales management:** record sales and review sale details.

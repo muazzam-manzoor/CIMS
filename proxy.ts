@@ -10,6 +10,8 @@ const LOGIN_PAGE = "/login";
 const PUBLIC_API_ROUTES = [
   "/api/auth/login",
   "/api/auth/logout",
+  "/api/auth/forgot-password",
+  "/api/auth/reset-password",
   "/api/health",
 ];
 
