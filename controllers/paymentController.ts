@@ -16,7 +16,7 @@ import { SIGNED_AMOUNT, netPaidBySale, signed } from "@/lib/paymentTotals";
 type AuditActor = {
   userId: string;
   name: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
 };
 
 type Method = "CASH" | "BANK" | "ONLINE" | "OTHER";

@@ -488,6 +488,7 @@ const japanese: Record<string, string> = {
   "Note (optional)": "備考（任意）",
   "Nothing to show": "表示する内容はありません",
   OWNER: "オーナー",
+  SUPERADMIN: "スーパー管理者",
   AVAILABLE: "在庫あり",
   SOLD: "販売済み",
   PAID: "支払済み",

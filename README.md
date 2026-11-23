@@ -13,6 +13,10 @@ Managing vehicle stock and related financial activity across separate records ma
 
 Set `EMAIL_USER` and `EMAIL_PASS` in `.env.local` to a Gmail account (use a Gmail app password when required). These credentials are used to send one-time password reset codes. Reset codes expire after 10 minutes and are limited to five attempts.
 
+## Admin access and permissions
+
+Create the initial Superadmin once with `npm run admin:superadmin`. Only the Superadmin can create or manage admin accounts, configure role permissions, and define custom permission bundles. Existing OWNER, MANAGER, and STAFF access is retained as the initial permission configuration. Audit log viewing is controlled by the `auditLogs.view` permission.
+
 ## Scripts
 
 - **Vehicle inventory:** maintain vehicle records and supporting images.

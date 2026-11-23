@@ -14,7 +14,7 @@ import type { AuditAction, AuditEntity } from "@/models/AuditLog";
 type AuditActor = {
   userId: string;
   name?: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
 };
 
 type RequestBody = Record<string, unknown>;

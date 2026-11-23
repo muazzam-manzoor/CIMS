@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import Admin from "@/models/Admin";
 import { createAuditLog } from "@/lib/audit";
+import { getEffectivePermissions } from "@/lib/authorization";
 
 
 import {
@@ -142,7 +143,7 @@ export async function getCurrentAdmin(
       _id: auth.userId,
       isActive: true,
     }).select(
-      "_id name email role isActive createdAt updatedAt",
+      "_id name email role isActive permissions createdAt updatedAt",
     );
 
     if (!admin) {
@@ -159,9 +160,15 @@ export async function getCurrentAdmin(
       return response;
     }
 
+    const adminData = admin.toObject();
+    const permissions = await getEffectivePermissions(
+      admin.role,
+      admin.permissions ?? [],
+    );
+
     return NextResponse.json({
       success: true,
-      data: admin,
+      data: { ...adminData, permissions },
     });
   } catch (error) {
     console.error(

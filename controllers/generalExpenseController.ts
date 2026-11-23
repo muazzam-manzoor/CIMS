@@ -11,7 +11,7 @@ import { getPaginationParams } from "@/lib/pagination";
 type AuditActor = {
   userId: string;
   name: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
 };
 
 export async function createGeneralExpense(data: {

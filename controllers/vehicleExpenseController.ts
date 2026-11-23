@@ -15,7 +15,7 @@ import {
 type AuditActor = {
   userId: string;
   name: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
 };
 type CreateVehicleExpenseData = {
   vehicleId: string;

@@ -271,7 +271,6 @@ export default function InventoryPage() {
   };
   const openSellModal = (vehicle: Vehicle) => {
     setSelectedVehicle(vehicle);
-    console.log(vehicle)
     setSellStep(1);
     setSaleType("AUCTION");
     setSalePrice(String(vehicle?.purchasePrice ?? ""));

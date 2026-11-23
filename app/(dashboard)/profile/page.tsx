@@ -8,7 +8,7 @@ type Admin = {
   _id: string;
   name: string;
   email: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
   isActive: boolean;
 };
 

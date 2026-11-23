@@ -1,5 +1,6 @@
 import { jwtVerify, SignJWT } from "jose";
 import type { NextRequest } from "next/server";
+import type { AdminRole } from "@/lib/roles";
 
 export const AUTH_COOKIE_NAME = "cims_session";
 
@@ -18,7 +19,7 @@ const getSecret = () => {
 export type AuthPayload = {
   userId: string;
   email: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: AdminRole;
 };
 
 export async function createAuthToken(
@@ -49,7 +50,7 @@ export async function verifyAuthToken(
     if (
       typeof payload.sub !== "string" ||
       typeof payload.email !== "string" ||
-      !["OWNER", "MANAGER", "STAFF"].includes(
+      !["SUPERADMIN", "OWNER", "MANAGER", "STAFF"].includes(
         String(payload.role),
       )
     ) {
@@ -59,7 +60,7 @@ export async function verifyAuthToken(
     return {
       userId: payload.sub,
       email: payload.email,
-      role: payload.role as AuthPayload["role"],
+      role: payload.role as AdminRole,
     };
   } catch {
     return null;

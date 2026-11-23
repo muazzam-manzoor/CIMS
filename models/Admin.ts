@@ -3,17 +3,16 @@ import mongoose, {
     Model,
     Schema,
   } from "mongoose";
-  
-  export type AdminRole =
-    | "OWNER"
-    | "MANAGER"
-    | "STAFF";
+import type { AdminRole } from "@/lib/roles";
+
+export type { AdminRole } from "@/lib/roles";
   
   export interface IAdmin extends Document {
     name: string;
     email: string;
     passwordHash: string;
     role: AdminRole;
+    permissions: string[];
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -43,8 +42,13 @@ import mongoose, {
   
       role: {
         type: String,
-        enum: ["OWNER", "MANAGER", "STAFF"],
+        enum: ["SUPERADMIN", "OWNER", "MANAGER", "STAFF"],
         default: "OWNER",
+      },
+
+      permissions: {
+        type: [String],
+        default: [],
       },
   
       isActive: {
@@ -55,6 +59,14 @@ import mongoose, {
     },
     {
       timestamps: true,
+    },
+  );
+
+  adminSchema.index(
+    { role: 1 },
+    {
+      unique: true,
+      partialFilterExpression: { role: "SUPERADMIN" },
     },
   );
   

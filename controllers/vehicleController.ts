@@ -56,7 +56,7 @@ type SortOrder = "asc" | "desc";
 type AuditActor = {
   userId: string;
   name: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
 };
 export async function getVehicles(
   searchParams: URLSearchParams,
@@ -136,12 +136,6 @@ export async function getVehicles(
         Vehicle.countDocuments(filter),
       ]);
       const queryMs = performance.now() - queryStarted;
-
-      console.log({
-        connectMs: Math.round(connectMs),
-        queryMs: Math.round(queryMs),
-        resultCount: vehicles.length,
-      });
 
     return NextResponse.json({
       success: true,

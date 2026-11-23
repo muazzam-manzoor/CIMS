@@ -2,18 +2,28 @@
 
 import { useLang, translateUI } from "@/components/language-provider";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CarFront, ChevronDown, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { isNavActive, navigation, settingsItem } from "@/lib/nav";
+import {
+  isNavActive,
+  navigation,
+  settingsItem,
+  type NavItem,
+} from "@/lib/nav";
 
 type SidebarProps = {
   open: boolean;
   onClose: () => void;
 };
 
-const findOpenMenu = (pathname: string) =>
-  navigation.find((item) =>
+type AdminAccess = {
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
+  permissions: string[];
+};
+
+const findOpenMenu = (pathname: string, items: NavItem[] = navigation) =>
+  items.find((item) =>
     item.children?.some((child) =>
       isNavActive(pathname, child.href, child.exact),
     ),
@@ -34,17 +44,60 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   useLang();
   const pathname = usePathname();
   const SettingsIcon = settingsItem.icon;
+  const router = useRouter();
 
   const [expandedMenu, setExpandedMenu] = useState<string | null>(() =>
     findOpenMenu(pathname),
   );
   const [menuPath, setMenuPath] = useState(pathname);
+  const [adminAccess, setAdminAccess] = useState<AdminAccess | null>(null);
+
+  useEffect(() => {
+    const loadAccess = async () => {
+      try {
+        const response = await fetch("/api/auth/me");
+        if (!response.ok) return;
+
+        const result = await response.json();
+        if (result.success) {
+          setAdminAccess({
+            role: result.data.role,
+            permissions: result.data.permissions ?? [],
+          });
+        }
+      } catch (error) {
+        console.error("Load sidebar permissions error:", error);
+      }
+    };
+
+    void loadAccess();
+  }, []);
+
+  const isSuperadmin = adminAccess?.role === "SUPERADMIN";
+  const canAccess = (permission?: string) =>
+    isSuperadmin || !permission || Boolean(adminAccess?.permissions.includes(permission));
+  const visibleNavigation = navigation.flatMap((item) => {
+    if (!item.children?.length) {
+      return canAccess(item.permission) ? [item] : [];
+    }
+
+    const children = item.children.filter((child) =>
+      canAccess(child.permission),
+    );
+    return children.length > 0 ? [{ ...item, children }] : [];
+  });
+  const canOpenSettings =
+    isSuperadmin || canAccess(settingsItem.permission);
 
   // Re-open the right group when the page changes (no effect needed)
   if (menuPath !== pathname) {
     setMenuPath(pathname);
-    setExpandedMenu(findOpenMenu(pathname));
+    setExpandedMenu(findOpenMenu(pathname, visibleNavigation));
   }
+  const handleHome = () => {
+    router.push("/");
+    onClose();
+  };
 
   // Mobile drawer: lock page scroll, close on Escape, close if resized to desktop
   useEffect(() => {
@@ -95,16 +148,28 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           <div className="pointer-events-none absolute -top-12 -right-10 h-32 w-32 rounded-full bg-sky-500/20 blur-2xl" />
 
           <div className="relative flex h-[76px] items-center justify-center px-3 group-hover/sidebar:justify-start group-hover/sidebar:px-5 max-lg:justify-start max-lg:px-5">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-blue-700 shadow-lg shadow-blue-900/40">
+            <button
+              type="button"
+              onClick={handleHome}
+              aria-label="Go to home"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-blue-700 shadow-lg shadow-blue-900/40"
+            >
               <CarFront className="h-5 w-5 text-white" />
-            </div>
+            </button>
 
-            <div className="ml-3 hidden min-w-0 flex-1 max-lg:block group-hover/sidebar:block">
+            <button
+              type="button"
+              onClick={handleHome}
+              className="ml-3 hidden min-w-0 flex-1 text-left max-lg:block group-hover/sidebar:block"
+            >
               <p className="text-[11px] font-semibold tracking-[0.18em] text-sky-300/80 uppercase">
-                {translateUI("Workspace")} </p>
+                {translateUI("Workspace")}
+              </p>
+
               <h1 className="truncate text-lg font-semibold tracking-tight">
-                {translateUI("CIMS")} </h1>
-            </div>
+                {translateUI("CIMS")}
+              </h1>
+            </button>
 
             <button
               type="button"
@@ -125,7 +190,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             {translateUI("Menu")} </p>
 
           <div className="space-y-1">
-            {navigation.map((item) => {
+            {visibleNavigation.map((item) => {
               const Icon = item.icon;
               const hasChildren = Boolean(item.children?.length);
               const isExpanded = expandedMenu === item.href;
@@ -232,7 +297,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </nav>
 
         {/* Settings (stays pinned, clear of the phone's bottom bar) */}
-        <div className="shrink-0 border-t border-white/10 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+        {canOpenSettings && <div className="shrink-0 border-t border-white/10 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
           <Link
             href={settingsItem.href}
             title={translateUI("Settings")}
@@ -249,7 +314,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
             <span className={LABEL}>{translateUI("Settings")}</span>
           </Link>
-        </div>
+        </div>}
       </aside>
     </>
   );

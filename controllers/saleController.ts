@@ -11,7 +11,7 @@ import { SIGNED_AMOUNT } from "@/lib/paymentTotals";
 type AuditActor = {
   userId: string;
   name: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
 };
 export async function createSale(data: {
   vehicleId: string;

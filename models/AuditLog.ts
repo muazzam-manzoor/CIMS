@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import type { AdminRole } from "@/lib/roles";
 
 export type AuditAction =
   | "CREATE"
@@ -27,7 +28,7 @@ export type AuditEntity =
 export interface IAuditLog extends Document {
   actorId?: mongoose.Types.ObjectId;
   actorName?: string;
-  actorRole?: "OWNER" | "MANAGER" | "STAFF";
+  actorRole?: AdminRole;
 
   action: AuditAction;
   entity: AuditEntity;
@@ -55,7 +56,7 @@ const auditLogSchema = new Schema<IAuditLog>(
 
     actorRole: {
       type: String,
-      enum: ["OWNER", "MANAGER", "STAFF"],
+      enum: ["SUPERADMIN", "OWNER", "MANAGER", "STAFF"],
     },
 
     action: {

@@ -3,10 +3,11 @@ import AuditLog, {
   AuditAction,
   AuditEntity,
 } from "@/models/AuditLog";
+import type { AdminRole } from "@/lib/roles";
 
 type AuditActor = {
   userId: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: AdminRole;
   name?: string;
 };
 

@@ -16,6 +16,7 @@ export type NavItem = {
   href: string;
   icon: LucideIcon;
   description: string;
+  permission?: string;
   exact?: boolean;
   children?: NavItem[];
 };
@@ -26,18 +27,21 @@ export const navigation: NavItem[] = [
     href: "/",
     icon: LayoutDashboard,
     description: "Business overview",
+    permission: "dashboard.view",
   },
   {
     name: "Inventory",
     href: "/inventory",
     icon: CarFront,
     description: "Vehicles in stock",
+    permission: "inventory.view",
   },
   {
     name: "Sales",
     href: "/sales",
     icon: ShoppingCart,
     description: "Deals and invoices",
+    permission: "sales.view",
   },
   // {
   //   name: "Customers",
@@ -56,12 +60,14 @@ export const navigation: NavItem[] = [
         href: "/expenses/vehicle",
         icon: CarFront,
         description: "Vehicle-related costs",
+        permission: "vehicleExpenses.view",
       },
       {
         name: "General Expenses",
         href: "/expenses/general",
         icon: Receipt,
         description: "Business operating costs",
+        permission: "generalExpenses.view",
       },
     ],
   },
@@ -70,6 +76,7 @@ export const navigation: NavItem[] = [
     href: "/payments",
     icon: CreditCard,
     description: "Money in and out",
+    permission: "payments.view",
   },
   {
     name: "Money",
@@ -77,9 +84,9 @@ export const navigation: NavItem[] = [
     icon: BadgeJapaneseYen,
     description: "Where your money came from and went",
     children: [
-      { name: "Overview", href: "/finance",exact: true, icon: BarChart3, description: "Money summary" },
-      { name: "Partners", href: "/finance/partners", icon: Users, description: "People who invest with you" },
-      { name: "Loans", href: "/finance/loans", icon: Receipt, description: "Money borrowed or lent" },
+      { name: "Overview", href: "/finance",exact: true, icon: BarChart3, description: "Money summary", permission: "financeOverview.view" },
+      { name: "Partners", href: "/finance/partners", icon: Users, description: "People who invest with you", permission: "partners.view" },
+      { name: "Loans", href: "/finance/loans", icon: Receipt, description: "Money borrowed or lent", permission: "loans.view" },
     ],
   },
   {
@@ -87,6 +94,7 @@ export const navigation: NavItem[] = [
     href: "/reports",
     icon: BarChart3,
     description: "Performance insights",
+    permission: "reports.view",
   },
 ];
 
@@ -95,6 +103,7 @@ export const settingsItem: NavItem = {
   href: "/settings",
   icon: Settings,
   description: "Workspace preferences",
+  permission: "auditLogs.view",
 };
 
 export function isNavActive(

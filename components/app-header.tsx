@@ -23,7 +23,7 @@ type AppHeaderProps = {
 type Admin = {
   name: string;
   email: string;
-  role: "OWNER" | "MANAGER" | "STAFF";
+  role: "SUPERADMIN" | "OWNER" | "MANAGER" | "STAFF";
 };
 
 export function AppHeader({ onMenuClick }: AppHeaderProps) {
